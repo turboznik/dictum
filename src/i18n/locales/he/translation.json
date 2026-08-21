@@ -525,12 +525,12 @@
         "bindingsReset": "קיצורי המקלדת לא היו תואמים ואופסו לברירות המחדל"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "נתיבי ניפוי באגים",
+        "description": "מיקומי הנתונים של Dictum שנקבעו עבור התקנה זו",
         "appData": "נתוני אפליקציה:",
         "models": "מודלים:",
         "settings": "הגדרות:",
-        "logs": "Logs:"
+        "logs": "יומנים:"
       },
       "pasteDelay": {
         "title": "השהיית הדבקה (לפני)",

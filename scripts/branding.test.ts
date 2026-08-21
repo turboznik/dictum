@@ -41,6 +41,17 @@ describe("Dictum product identity", () => {
     ]);
   });
 
+  test("portable and installer identity cannot adopt Handy data", async () => {
+    const portable = await readText("src-tauri/src/portable.rs");
+    const installer = await readText("src-tauri/nsis/installer.nsi");
+
+    expect(portable).not.toContain("upgrading legacy empty marker");
+    expect(installer).not.toContain('${OrIf} $2 == ""');
+    expect(installer).toContain(
+      'VIAddVersionKey "CompanyName" "${MANUFACTURER}"',
+    );
+  });
+
   test("maintained translations use Dictum except for the Handy Keys feature name", async () => {
     const localesDir = path.join(repoRoot, "src", "i18n", "locales");
     const localeDirectories = await readdir(localesDir, {

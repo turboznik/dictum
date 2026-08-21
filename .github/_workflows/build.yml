@@ -835,6 +835,12 @@ jobs:
             if (-not $dictum) {
               throw "$Label package is missing dictum.exe"
             }
+            $versionInfo = $dictum.VersionInfo
+            if ($versionInfo.ProductName -ne "Dictum" -or
+                $versionInfo.ProductVersion -ne "0.1.0" -or
+                $versionInfo.CompanyName -ne "turboznik") {
+              throw "$Label dictum.exe has incorrect product/version/company metadata"
+            }
             foreach ($dll in $stagedDlls) {
               if (-not (Get-ChildItem $Root -Filter $dll.Name -Recurse -ErrorAction SilentlyContinue)) {
                 throw "$Label package is missing staged runtime DLL $($dll.Name)"
@@ -861,6 +867,16 @@ jobs:
 
           foreach ($pkg in $nsisPackages) {
             Write-Host "Auditing NSIS package: $($pkg.FullName)"
+            $expectedArch = if ("${{ inputs.target }}" -like "aarch64*") { "arm64" } else { "x64" }
+            $expectedName = "Dictum_0.1.0_$expectedArch-setup.exe"
+            if ($pkg.Name -ne $expectedName) {
+              throw "Expected NSIS package $expectedName, found $($pkg.Name)"
+            }
+            if ($pkg.VersionInfo.ProductName -ne "Dictum" -or
+                $pkg.VersionInfo.ProductVersion -ne "0.1.0" -or
+                $pkg.VersionInfo.CompanyName -ne "turboznik") {
+              throw "$($pkg.Name) has incorrect product/version/company metadata"
+            }
             $installDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
             New-Item -ItemType Directory -Path $installDir | Out-Null
             $proc = Start-Process -FilePath $pkg.FullName -ArgumentList @("/S", "/PORTABLE", "/D=$installDir") -Wait -PassThru

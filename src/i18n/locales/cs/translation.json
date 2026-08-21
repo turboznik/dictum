@@ -525,12 +525,12 @@
         "bindingsReset": "Klávesové zkratky byly nekompatibilní a byly obnoveny na výchozí hodnoty"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Cesty pro ladění",
+        "description": "Určená umístění dat Dictum používaná touto instalací",
         "appData": "Data aplikace:",
         "models": "Modely:",
         "settings": "Nastavení:",
-        "logs": "Logs:"
+        "logs": "Protokoly:"
       },
       "pasteDelay": {
         "title": "Zpoždění vložení (před)",

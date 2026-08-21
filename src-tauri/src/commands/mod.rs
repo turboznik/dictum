@@ -5,6 +5,8 @@ pub mod transcription;
 
 use crate::settings::{get_settings, write_settings, AppSettings, LogLevel};
 use crate::utils::cancel_current_operation;
+use serde::Serialize;
+use specta::Type;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_opener::OpenerExt;
 
@@ -48,6 +50,33 @@ pub fn get_log_dir_path(app: AppHandle) -> Result<String, String> {
         .map_err(|e| format!("Failed to get log directory: {}", e))?;
 
     Ok(log_dir.to_string_lossy().to_string())
+}
+
+#[derive(Serialize, Type)]
+pub struct DebugPaths {
+    app_data: String,
+    models: String,
+    settings: String,
+    logs: String,
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn get_debug_paths(app: AppHandle) -> Result<DebugPaths, String> {
+    let app_data = crate::portable::app_data_dir(&app)
+        .map_err(|error| format!("Failed to get app data directory: {error}"))?;
+    let logs = crate::portable::app_log_dir(&app)
+        .map_err(|error| format!("Failed to get log directory: {error}"))?;
+
+    Ok(DebugPaths {
+        models: app_data.join("models").to_string_lossy().into_owned(),
+        settings: app_data
+            .join(crate::settings::SETTINGS_STORE_PATH)
+            .to_string_lossy()
+            .into_owned(),
+        app_data: app_data.to_string_lossy().into_owned(),
+        logs: logs.to_string_lossy().into_owned(),
+    })
 }
 
 #[specta::specta]

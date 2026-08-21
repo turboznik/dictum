@@ -525,12 +525,12 @@
         "bindingsReset": "鍵盤快捷鍵不相容，已重設為預設值"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "偵錯路徑",
+        "description": "此安裝所使用的 Dictum 資料實際位置",
         "appData": "應用程式資料:",
         "models": "模型:",
         "settings": "設定:",
-        "logs": "Logs:"
+        "logs": "記錄:"
       },
       "pasteDelay": {
         "title": "貼上延遲（前）",

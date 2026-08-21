@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { commands } from "@/bindings";
+import { commands, type DebugPaths as ResolvedDebugPaths } from "@/bindings";
 import { SettingContainer } from "../../ui/SettingContainer";
 
 interface DebugPathsProps {
@@ -13,23 +13,13 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
   grouped = false,
 }) => {
   const { t } = useTranslation();
-  const [appDataDir, setAppDataDir] = useState("");
-  const [logDir, setLogDir] = useState("");
+  const [paths, setPaths] = useState<ResolvedDebugPaths>();
 
   useEffect(() => {
-    Promise.all([commands.getAppDirPath(), commands.getLogDirPath()]).then(
-      ([appDataResult, logResult]) => {
-        if (appDataResult.status === "ok") setAppDataDir(appDataResult.data);
-        if (logResult.status === "ok") setLogDir(logResult.data);
-      },
-    );
+    commands.getDebugPaths().then((result) => {
+      if (result.status === "ok") setPaths(result.data);
+    });
   }, []);
-
-  const joinPath = (base: string, child: string) => {
-    if (!base) return "";
-    const separator = base.includes("\\") ? "\\" : "/";
-    return `${base.replace(/[\\/]$/u, "")}${separator}${child}`;
-  };
 
   return (
     <SettingContainer
@@ -43,27 +33,27 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
           <span className="font-medium">
             {t("settings.debug.paths.appData")}
           </span>{" "}
-          <span className="font-mono text-xs select-text">{appDataDir}</span>
+          <span className="font-mono text-xs select-text">
+            {paths?.app_data}
+          </span>
         </div>
         <div>
           <span className="font-medium">
             {t("settings.debug.paths.models")}
           </span>{" "}
-          <span className="font-mono text-xs select-text">
-            {joinPath(appDataDir, "models")}
-          </span>
+          <span className="font-mono text-xs select-text">{paths?.models}</span>
         </div>
         <div>
           <span className="font-medium">
             {t("settings.debug.paths.settings")}
           </span>{" "}
           <span className="font-mono text-xs select-text">
-            {joinPath(appDataDir, "settings_store.json")}
+            {paths?.settings}
           </span>
         </div>
         <div>
           <span className="font-medium">{t("settings.debug.paths.logs")}</span>{" "}
-          <span className="font-mono text-xs select-text">{logDir}</span>
+          <span className="font-mono text-xs select-text">{paths?.logs}</span>
         </div>
       </div>
     </SettingContainer>

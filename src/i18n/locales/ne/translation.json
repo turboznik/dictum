@@ -532,12 +532,12 @@
         "bindingsReset": "किबोर्ड सर्टकटहरू असंगत भएकाले डिफल्टमा रिसेट गरियो"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "डिबग पाथहरू",
+        "description": "यस स्थापनाले प्रयोग गर्ने Dictum डेटाका निर्धारित स्थानहरू",
         "appData": "एप डेटा:",
         "models": "मोडेलहरू:",
         "settings": "सेटिङहरू:",
-        "logs": "Logs:"
+        "logs": "लगहरू:"
       },
       "pasteDelay": {
         "title": "पेस्ट ढिलाइ (अघि)",

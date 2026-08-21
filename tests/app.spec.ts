@@ -76,6 +76,16 @@ const installTauriMocks = async (page: Page, mode: AppMode) => {
               return "C:\\Users\\Tester\\AppData\\Roaming\\io.github.turboznik.dictum";
             case "get_log_dir_path":
               return "C:\\Users\\Tester\\AppData\\Roaming\\io.github.turboznik.dictum\\logs";
+            case "get_debug_paths":
+              return {
+                app_data:
+                  "C:\\Users\\Tester\\AppData\\Roaming\\io.github.turboznik.dictum",
+                models:
+                  "C:\\Users\\Tester\\AppData\\Roaming\\io.github.turboznik.dictum\\models",
+                settings:
+                  "C:\\Users\\Tester\\AppData\\Roaming\\io.github.turboznik.dictum\\settings_store.json",
+                logs: "C:\\Users\\Tester\\AppData\\Roaming\\io.github.turboznik.dictum\\logs",
+              };
             case "plugin:event|listen":
               return callbackId + 1;
             default:
@@ -97,14 +107,41 @@ test.describe("Dictum App", () => {
     page,
   }) => {
     await installTauriMocks(page, "settings");
-    await page.goto("/");
+    for (const colorScheme of ["light", "dark"] as const) {
+      await page.emulateMedia({ colorScheme });
+      await page.goto("/");
 
-    await expect(page.getByTestId("dictum-wordmark")).toHaveText("Dictum");
-    await expect(
-      page.locator(
-        '[data-section-id="general"] [data-testid="general-settings-icon"]',
-      ),
-    ).toBeVisible();
+      await expect(page.getByTestId("dictum-wordmark")).toHaveText("Dictum");
+      const generalSection = page.locator('[data-section-id="general"]');
+      await expect(
+        generalSection.getByTestId("general-settings-icon"),
+      ).toBeVisible();
+
+      const contrastRatio = await generalSection.evaluate((element) => {
+        const parseRgb = (value: string) =>
+          value
+            .match(/\d+(?:\.\d+)?/gu)
+            ?.slice(0, 3)
+            .map(Number) ?? [];
+        const luminance = (rgb: number[]) => {
+          const linear = rgb.map((channel) => {
+            const normalized = channel / 255;
+            return normalized <= 0.04045
+              ? normalized / 12.92
+              : ((normalized + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+        };
+        const style = getComputedStyle(element);
+        const foreground = luminance(parseRgb(style.color));
+        const background = luminance(parseRgb(style.backgroundColor));
+        return (
+          (Math.max(foreground, background) + 0.05) /
+          (Math.min(foreground, background) + 0.05)
+        );
+      });
+      expect(contrastRatio).toBeGreaterThanOrEqual(4.5);
+    }
   });
 
   test("permission onboarding presents the Dictum wordmark", async ({

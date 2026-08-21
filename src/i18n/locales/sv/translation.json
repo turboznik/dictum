@@ -525,12 +525,12 @@
         "bindingsReset": "Kortkommandona var inkompatibla och återställdes till standardvärden"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Felsökningssökvägar",
+        "description": "Fastställda platser för Dictum-data som används av den här installationen",
         "appData": "Appdata:",
         "models": "Modeller:",
         "settings": "Inställningar:",
-        "logs": "Logs:"
+        "logs": "Loggar:"
       },
       "pasteDelay": {
         "title": "Fördröjning vid klistra in (före)",

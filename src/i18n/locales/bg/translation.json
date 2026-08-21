@@ -525,12 +525,12 @@
         "bindingsReset": "Бързите клавиши бяха несъвместими и са нулирани към подразбираните"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Пътища за отстраняване на грешки",
+        "description": "Определени местоположения на данните на Dictum, използвани от тази инсталация",
         "appData": "Данни на приложението:",
         "models": "Модели:",
         "settings": "Настройки:",
-        "logs": "Logs:"
+        "logs": "Дневници:"
       },
       "pasteDelay": {
         "title": "Забавяне при поставяне (преди)",

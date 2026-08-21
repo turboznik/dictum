@@ -549,6 +549,14 @@ async getLogDirPath() : Promise<Result<string, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async getDebugPaths() : Promise<Result<DebugPaths, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_debug_paths") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async setLogLevel(level: LogLevel) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("set_log_level", { level }) };
@@ -978,6 +986,7 @@ export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_d
 export type BindingResponse = { success: boolean; binding: ShortcutBinding | null; error: string | null }
 export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CustomSounds = { start: boolean; stop: boolean }
+export type DebugPaths = { app_data: string; models: string; settings: string; logs: string }
 export type EngineType = 
 /**
  * Any GGML/GGUF model loaded through transcribe-cpp (Whisper, Parakeet,

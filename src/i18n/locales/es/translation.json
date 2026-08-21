@@ -525,12 +525,12 @@
         "bindingsReset": "Los atajos de teclado eran incompatibles y se restablecieron a los valores predeterminados"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Rutas de depuración",
+        "description": "Ubicaciones resueltas de los datos de Dictum que utiliza esta instalación",
         "appData": "Datos de la aplicación:",
         "models": "Modelos:",
         "settings": "Configuración:",
-        "logs": "Logs:"
+        "logs": "Registros:"
       },
       "pasteDelay": {
         "title": "Retraso de pegado (antes)",

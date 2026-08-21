@@ -525,12 +525,12 @@
         "bindingsReset": "Klavye kısayolları uyumsuzdu ve varsayılan ayarlara sıfırlandı"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Hata ayıklama yolları",
+        "description": "Bu kurulumun kullandığı çözümlenmiş Dictum veri konumları",
         "appData": "Uygulama Verileri:",
         "models": "Modeller:",
         "settings": "Ayarlar:",
-        "logs": "Logs:"
+        "logs": "Günlükler:"
       },
       "pasteDelay": {
         "title": "Yapıştırma Gecikmesi (Önce)",

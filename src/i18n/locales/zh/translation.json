@@ -525,12 +525,12 @@
         "bindingsReset": "键盘快捷键不兼容，已重置为默认值"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "调试路径",
+        "description": "此安装使用的 Dictum 数据实际位置",
         "appData": "应用数据:",
         "models": "模型:",
         "settings": "设置:",
-        "logs": "Logs:"
+        "logs": "日志:"
       },
       "pasteDelay": {
         "title": "粘贴延迟（前）",

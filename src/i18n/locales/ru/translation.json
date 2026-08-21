@@ -525,12 +525,12 @@
         "bindingsReset": "Клавиатурные сочетания были несовместимы и сброшены к значениям по умолчанию"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Пути отладки",
+        "description": "Определённые расположения данных Dictum, используемые этой установкой",
         "appData": "Данные приложения:",
         "models": "Модели:",
         "settings": "Настройки:",
-        "logs": "Logs:"
+        "logs": "Журналы:"
       },
       "pasteDelay": {
         "title": "Задержка вставки (до)",

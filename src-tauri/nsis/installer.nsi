@@ -588,10 +588,8 @@ Function .onInit
 
 
   ; --- PORTABLE MODE --- Auto-detect portable mode during updates.
-  ; Preserve portable installs that use either the current magic-string marker
-  ; or an empty marker alongside Data/. Require Data/ for the empty-marker case
-  ; so stale setup side-effect files do not
-  ; accidentally opt an updater run into portable mode.
+  ; Preserve only Dictum portable installs with the current magic-string marker.
+  ; Empty or Handy markers must not adopt an existing portable Data/ directory.
   ${If} $PortableMode <> 1
   ${AndIf} $UpdateMode = 1
   ${AndIf} ${FileExists} "$INSTDIR\portable"
@@ -599,9 +597,6 @@ Function .onInit
     FileRead $1 $2
     FileClose $1
     ${If} $2 == "Dictum Portable Mode"
-      StrCpy $PortableMode 1
-    ${OrIf} $2 == ""
-    ${AndIf} ${FileExists} "$INSTDIR\Data"
       StrCpy $PortableMode 1
     ${EndIf}
   ${EndIf}

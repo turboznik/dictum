@@ -525,12 +525,12 @@
         "bindingsReset": "Le scorciatoie da tastiera erano incompatibili e sono state ripristinate ai valori predefiniti"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Percorsi di debug",
+        "description": "Posizioni risolte dei dati di Dictum utilizzate da questa installazione",
         "appData": "Dati App:",
         "models": "Modelli:",
         "settings": "Impostazioni:",
-        "logs": "Logs:"
+        "logs": "Log:"
       },
       "pasteDelay": {
         "title": "Ritardo incolla (prima)",

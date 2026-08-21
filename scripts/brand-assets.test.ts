@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { PNG } from "pngjs";
 import path from "node:path";
+import { parseWaveformBars, traySvg } from "./generate-brand-assets";
 
 const repoRoot = path.resolve(import.meta.dir, "..");
 
@@ -14,6 +15,17 @@ describe("Dictum brand assets", () => {
     expect(source).toContain('fill="#1E40AF"');
     expect(source.match(/<rect /gu)).toHaveLength(6);
     expect(source).not.toContain("stroke=");
+  });
+
+  test("tray geometry is derived from the authored app waveform", async () => {
+    const source = await Bun.file(
+      path.join(repoRoot, "assets/branding/dictum-app-icon.svg"),
+    ).text();
+    const changedSource = source.replace('height="288"', 'height="240"');
+
+    expect(
+      traySvg("idle", "#FFFFFF", parseWaveformBars(changedSource)),
+    ).not.toBe(traySvg("idle", "#FFFFFF", parseWaveformBars(source)));
   });
 
   test("checked-in Windows and tray PNGs have their expected dimensions", async () => {

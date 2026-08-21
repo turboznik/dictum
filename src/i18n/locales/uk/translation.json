@@ -525,12 +525,12 @@
         "bindingsReset": "Клавіатурні скорочення були несумісні та скинуті до значень за замовчуванням"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Шляхи налагодження",
+        "description": "Визначені розташування даних Dictum, які використовує це встановлення",
         "appData": "Дані програми:",
         "models": "Моделі:",
         "settings": "Налаштування:",
-        "logs": "Logs:"
+        "logs": "Журнали:"
       },
       "pasteDelay": {
         "title": "Затримка вставки (до)",

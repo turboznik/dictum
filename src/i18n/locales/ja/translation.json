@@ -525,12 +525,12 @@
         "bindingsReset": "キーボードショートカットに互換性がなかったため、デフォルトにリセットされました"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "デバッグパス",
+        "description": "このインストールで使用される Dictum データの解決済みの場所",
         "appData": "アプリデータ:",
         "models": "モデル:",
         "settings": "設定:",
-        "logs": "Logs:"
+        "logs": "ログ:"
       },
       "pasteDelay": {
         "title": "貼り付け遅延(前)",

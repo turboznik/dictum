@@ -525,12 +525,12 @@
         "bindingsReset": "Skróty klawiaturowe były niekompatybilne i zostały zresetowane do wartości domyślnych"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Ścieżki debugowania",
+        "description": "Ustalone lokalizacje danych Dictum używane przez tę instalację",
         "appData": "Dane aplikacji:",
         "models": "Modele:",
         "settings": "Ustawienia:",
-        "logs": "Logs:"
+        "logs": "Dzienniki:"
       },
       "pasteDelay": {
         "title": "Opóźnienie wklejania (przed)",

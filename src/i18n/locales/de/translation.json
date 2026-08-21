@@ -525,12 +525,12 @@
         "bindingsReset": "Tastaturkürzel waren inkompatibel und wurden auf die Standardwerte zurückgesetzt"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Debug-Pfade",
+        "description": "Aufgelöste Dictum-Datenspeicherorte, die von dieser Installation verwendet werden",
         "appData": "App-Daten:",
         "models": "Modelle:",
         "settings": "Einstellungen:",
-        "logs": "Logs:"
+        "logs": "Protokolle:"
       },
       "pasteDelay": {
         "title": "Einfügeverzögerung (vorher)",

@@ -525,12 +525,12 @@
         "bindingsReset": "Các phím tắt không tương thích và đã được đặt lại về mặc định"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Đường dẫn gỡ lỗi",
+        "description": "Các vị trí dữ liệu Dictum đã xác định được bản cài đặt này sử dụng",
         "appData": "Dữ liệu ứng dụng:",
         "models": "Mô hình:",
         "settings": "Cài đặt:",
-        "logs": "Logs:"
+        "logs": "Nhật ký:"
       },
       "pasteDelay": {
         "title": "Độ trễ dán (trước)",

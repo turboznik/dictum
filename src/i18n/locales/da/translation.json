@@ -532,12 +532,12 @@
         "bindingsReset": "Tastaturgenveje var inkompatible og blev nulstillet til standard"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Fejlfindingsstier",
+        "description": "Fastlagte placeringer af Dictum-data, som bruges af denne installation",
         "appData": "Appdata:",
         "models": "Modeller:",
         "settings": "Indstillinger:",
-        "logs": "Logs:"
+        "logs": "Logfiler:"
       },
       "pasteDelay": {
         "title": "Forsinkelse af indsættelse (før)",

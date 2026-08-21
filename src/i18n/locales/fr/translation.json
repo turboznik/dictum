@@ -525,12 +525,12 @@
         "bindingsReset": "Raccourcis clavier étaient incompatibles et ont été réinitialisés aux valeurs par défaut"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "Chemins de débogage",
+        "description": "Emplacements résolus des données de Dictum utilisés par cette installation",
         "appData": "Données de l'application :",
         "models": "Modèles :",
         "settings": "Paramètres :",
-        "logs": "Logs:"
+        "logs": "Journaux :"
       },
       "pasteDelay": {
         "title": "Délai de collage (avant)",

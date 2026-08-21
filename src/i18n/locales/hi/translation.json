@@ -532,12 +532,12 @@
         "bindingsReset": "कीबोर्ड शॉर्टकट संगत नहीं थे, इसलिए उन्हें डिफ़ॉल्ट पर रीसेट कर दिया गया"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "डीबग पथ",
+        "description": "इस इंस्टॉलेशन द्वारा उपयोग किए जाने वाले Dictum डेटा के निर्धारित स्थान",
         "appData": "ऐप डेटा:",
         "models": "मॉडल:",
         "settings": "सेटिंग:",
-        "logs": "Logs:"
+        "logs": "लॉग:"
       },
       "pasteDelay": {
         "title": "पेस्ट में देरी (पहले)",

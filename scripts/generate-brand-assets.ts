@@ -34,11 +34,27 @@ const windowsIconFiles = [
 
 type TrayState = "idle" | "recording" | "transcribing" | "warning";
 
-const trayStates: Record<TrayState, readonly number[]> = {
-  idle: [18, 34, 50, 34, 18],
-  recording: [14, 28, 46, 34, 20],
-  transcribing: [28, 48, 20, 44, 30],
-  warning: [18, 34, 50, 34, 18],
+interface WaveformBar {
+  x: number;
+  width: number;
+  height: number;
+  rx: number;
+}
+
+const trayTransforms: Record<
+  TrayState,
+  { order: readonly number[]; scale: readonly number[] }
+> = {
+  idle: { order: [0, 1, 2, 3, 4], scale: [1, 1, 1, 1, 1] },
+  recording: {
+    order: [0, 1, 2, 3, 4],
+    scale: [0.72, 0.78, 0.92, 0.85, 0.88],
+  },
+  transcribing: {
+    order: [1, 2, 0, 3, 1],
+    scale: [0.78, 0.96, 1, 0.9, 0.78],
+  },
+  warning: { order: [0, 1, 2, 3, 4], scale: [1, 1, 1, 1, 1] },
 };
 
 const trayTargets = [
@@ -72,12 +88,59 @@ const trayTargets = [
   color: string;
 }>;
 
-const traySvg = (state: TrayState, color: string) => {
-  const bars = trayStates[state]
-    .map((height, index) => {
-      const x = 4 + index * 12;
+export const parseWaveformBars = (source: string): WaveformBar[] => {
+  const waveform = source.match(
+    /<g[^>]*id="waveform"[^>]*>([\s\S]*?)<\/g>/u,
+  )?.[1];
+  if (!waveform) throw new Error("App icon is missing the waveform group");
+
+  const readAttribute = (attributes: string, name: string) => {
+    const value = attributes.match(
+      new RegExp(`\\b${name}="([^"]+)"`, "u"),
+    )?.[1];
+    if (value === undefined) throw new Error(`Waveform bar is missing ${name}`);
+    return Number(value);
+  };
+
+  const bars = [...waveform.matchAll(/<rect\s+([^>]+)\/>/gu)].map(
+    ([, attributes]) => ({
+      x: readAttribute(attributes, "x"),
+      width: readAttribute(attributes, "width"),
+      height: readAttribute(attributes, "height"),
+      rx: readAttribute(attributes, "rx"),
+    }),
+  );
+  if (bars.length !== 5) {
+    throw new Error(`Expected five waveform bars, found ${bars.length}`);
+  }
+  return bars;
+};
+
+export const traySvg = (
+  state: TrayState,
+  color: string,
+  sourceBars: readonly WaveformBar[],
+) => {
+  const transform = trayTransforms[state];
+  const minX = Math.min(...sourceBars.map(({ x }) => x));
+  const maxX = Math.max(...sourceBars.map(({ x, width }) => x + width));
+  const maxHeight = Math.max(...sourceBars.map(({ height }) => height));
+  const xScale = 56 / (maxX - minX);
+  const heightScale = 50 / maxHeight;
+  const round = (value: number) => Math.round(value * 1000) / 1000;
+
+  const bars = transform.order
+    .map((sourceIndex, index) => {
+      const position = sourceBars[index];
+      const amplitude = sourceBars[sourceIndex];
+      const x = round(4 + (position.x - minX) * xScale);
+      const width = round(position.width * xScale);
+      const height = round(
+        amplitude.height * heightScale * transform.scale[index],
+      );
       const y = (64 - height) / 2;
-      return `<rect x="${x}" y="${y}" width="8" height="${height}" rx="4"/>`;
+      const rx = round(Math.min(width / 2, position.rx * xScale));
+      return `<rect x="${x}" y="${round(y)}" width="${width}" height="${height}" rx="${rx}"/>`;
     })
     .join("");
   const recordingDot =
@@ -163,18 +226,22 @@ const generate = async () => {
   const drift: string[] = [];
 
   try {
+    const appIconSource = path.join(
+      repoRoot,
+      "assets/branding/dictum-app-icon.svg",
+    );
+    const waveformBars = parseWaveformBars(
+      await readFile(appIconSource, "utf8"),
+    );
     await mkdir(appOutput, { recursive: true });
     await mkdir(trayOutput, { recursive: true });
-    await runTauriIcon(
-      path.join(repoRoot, "assets/branding/dictum-app-icon.svg"),
-      appOutput,
-    );
+    await runTauriIcon(appIconSource, appOutput);
 
     await Promise.all(
       trayTargets.map(async ({ file, state, color }) => {
         const source = path.join(temporaryRoot, `${file}.svg`);
         const output = path.join(trayOutput, file.replace(/\.png$/u, ""));
-        await writeFile(source, traySvg(state, color), "utf8");
+        await writeFile(source, traySvg(state, color, waveformBars), "utf8");
         await mkdir(output, { recursive: true });
         await runTauriIcon(source, output, true);
       }),
@@ -206,9 +273,11 @@ const generate = async () => {
   }
 };
 
-await generate();
-console.log(
-  checkOnly
-    ? "Dictum brand assets match their generated sources."
-    : "Generated Dictum Windows and tray assets.",
-);
+if (import.meta.main) {
+  await generate();
+  console.log(
+    checkOnly
+      ? "Dictum brand assets match their generated sources."
+      : "Generated Dictum Windows and tray assets.",
+  );
+}

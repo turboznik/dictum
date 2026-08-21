@@ -502,12 +502,12 @@
         "bindingsReset": "كانت اختصارات لوحة المفاتيح غير متوافقة وتمت إعادة تعيينها إلى القيم الافتراضية"
       },
       "paths": {
-        "title": "Debug Paths",
-        "description": "Resolved Dictum data locations used by this installation",
+        "title": "مسارات تصحيح الأخطاء",
+        "description": "مواقع بيانات Dictum المحددة التي يستخدمها هذا التثبيت",
         "appData": "بيانات التطبيق:",
         "models": "النماذج:",
         "settings": "الإعدادات:",
-        "logs": "Logs:"
+        "logs": "السجلات:"
       },
       "pasteDelay": {
         "title": "تأخير اللصق (قبل)",
