@@ -841,6 +841,10 @@ jobs:
                 $versionInfo.CompanyName -ne "turboznik") {
               throw "$Label dictum.exe has incorrect product/version/company metadata"
             }
+            $trayTooltip = (& $dictum.FullName --audit-tray-tooltip | Out-String).Trim()
+            if ($trayTooltip -notmatch '^Dictum v0\.1\.0(?: \(Dev\))?$') {
+              throw "$Label dictum.exe exposes incorrect tray tooltip identity: $trayTooltip"
+            }
             foreach ($dll in $stagedDlls) {
               if (-not (Get-ChildItem $Root -Filter $dll.Name -Recurse -ErrorAction SilentlyContinue)) {
                 throw "$Label package is missing staged runtime DLL $($dll.Name)"
@@ -929,9 +933,12 @@ jobs:
               $roamingRoot = Join-Path $runtimeRoot "Roaming"
               $localRoot = Join-Path $runtimeRoot "Local"
               $handyRoot = Join-Path $roamingRoot "com.pais.handy"
-              New-Item -ItemType Directory -Path $handyRoot -Force | Out-Null
+              $handyWebViewRoot = Join-Path $localRoot "com.pais.handy"
+              New-Item -ItemType Directory -Path $handyRoot, $handyWebViewRoot -Force | Out-Null
               $handySentinel = Join-Path $handyRoot "must-not-change.txt"
+              $handyWebViewSentinel = Join-Path $handyWebViewRoot "must-not-change.txt"
               Set-Content -LiteralPath $handySentinel -Value "Handy data"
+              Set-Content -LiteralPath $handyWebViewSentinel -Value "Handy WebView data"
 
               function New-IsolatedDictumProcess {
                 $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
@@ -976,12 +983,20 @@ jobs:
                 }
 
                 $dictumDataRoot = Join-Path $roamingRoot "io.github.turboznik.dictum"
+                $dictumWebViewRoot = Join-Path $localRoot "io.github.turboznik.dictum"
                 if (-not (Test-Path $dictumDataRoot)) {
                   throw "Dictum did not create its independent app-data root"
+                }
+                if (-not (Test-Path $dictumWebViewRoot)) {
+                  throw "Dictum did not create its independent WebView data root"
                 }
                 if ((Get-Content -LiteralPath $handySentinel -Raw).Trim() -ne "Handy data" -or
                     (Get-ChildItem -LiteralPath $handyRoot -Force).Count -ne 1) {
                   throw "Launching Dictum modified the isolated Handy data root"
+                }
+                if ((Get-Content -LiteralPath $handyWebViewSentinel -Raw).Trim() -ne "Handy WebView data" -or
+                    (Get-ChildItem -LiteralPath $handyWebViewRoot -Force).Count -ne 1) {
+                  throw "Launching Dictum modified the isolated Handy WebView data root"
                 }
               } finally {
                 if ($dictumProcess -and -not $dictumProcess.HasExited) {

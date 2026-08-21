@@ -60,12 +60,16 @@ pub struct CliArgs {
     /// Emit --transcribe-file results as JSON.
     #[arg(long)]
     pub json: bool,
+
+    /// Print the production tray tooltip for packaged identity audits.
+    #[arg(long, hide = true)]
+    pub audit_tray_tooltip: bool,
 }
 
 #[cfg(test)]
 mod tests {
     use super::CliArgs;
-    use clap::CommandFactory;
+    use clap::{CommandFactory, Parser};
 
     #[test]
     fn cli_uses_dictum_product_identity() {
@@ -75,5 +79,14 @@ mod tests {
             command.get_about().map(ToString::to_string).as_deref(),
             Some("Dictum - Speech to Text")
         );
+    }
+
+    #[test]
+    fn packaged_identity_audit_flag_is_hidden_from_help() {
+        let args = CliArgs::try_parse_from(["dictum", "--audit-tray-tooltip"]).unwrap();
+        assert!(args.audit_tray_tooltip);
+
+        let help = CliArgs::command().render_long_help().to_string();
+        assert!(!help.contains("audit-tray-tooltip"));
     }
 }

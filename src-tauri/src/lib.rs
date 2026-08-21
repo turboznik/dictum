@@ -588,6 +588,13 @@ fn run_headless_transcription(app: &AppHandle, args: &CliArgs) -> i32 {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run(cli_args: CliArgs) {
+    // This hidden, one-shot seam lets the Windows package audit execute the
+    // exact production function supplied to TrayIconBuilder::tooltip.
+    if cli_args.audit_tray_tooltip {
+        println!("{}", tray::tray_tooltip());
+        return;
+    }
+
     // Avoid ggml-metal residency-set teardown assertions when a native engine
     // outlives the Tauri shutdown sequence (#1902). This must happen before
     // transcribe-cpp initializes its Metal device. Advanced users can restore

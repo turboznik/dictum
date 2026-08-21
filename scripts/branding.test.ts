@@ -63,6 +63,10 @@ describe("Dictum product identity", () => {
     expect(buildWorkflow).toContain(
       'Join-Path $roamingRoot "io.github.turboznik.dictum"',
     );
+    expect(buildWorkflow).toContain(
+      'Join-Path $localRoot "io.github.turboznik.dictum"',
+    );
+    expect(buildWorkflow).toContain("--audit-tray-tooltip");
     expect(buildWorkflow).toContain("$secondInstance.WaitForExit(15000)");
   });
 
