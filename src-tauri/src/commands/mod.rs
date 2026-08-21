@@ -53,6 +53,7 @@ pub fn get_log_dir_path(app: AppHandle) -> Result<String, String> {
 }
 
 #[derive(Serialize, Type)]
+/// Filesystem locations shown in the debug settings panel.
 pub struct DebugPaths {
     app_data: String,
     models: String,
@@ -62,6 +63,7 @@ pub struct DebugPaths {
 
 #[tauri::command]
 #[specta::specta]
+/// Resolves the active Dictum data, model, settings, and log locations.
 pub fn get_debug_paths(app: AppHandle) -> Result<DebugPaths, String> {
     let app_data = crate::portable::app_data_dir(&app)
         .map_err(|error| format!("Failed to get app data directory: {error}"))?;

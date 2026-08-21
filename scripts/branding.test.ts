@@ -44,12 +44,26 @@ describe("Dictum product identity", () => {
   test("portable and installer identity cannot adopt Handy data", async () => {
     const portable = await readText("src-tauri/src/portable.rs");
     const installer = await readText("src-tauri/nsis/installer.nsi");
+    const buildWorkflow = await readText(".github/_workflows/build.yml");
 
     expect(portable).not.toContain("upgrading legacy empty marker");
     expect(installer).not.toContain('${OrIf} $2 == ""');
     expect(installer).toContain(
       'VIAddVersionKey "CompanyName" "${MANUFACTURER}"',
     );
+    expect(buildWorkflow).toContain(
+      'Get-ItemProperty "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Dictum"',
+    );
+    expect(buildWorkflow).toContain(
+      'Join-Path $shell.SpecialFolders("Programs") "Dictum.lnk"',
+    );
+    expect(buildWorkflow).toContain(
+      'Join-Path $shell.SpecialFolders("Desktop") "Dictum.lnk"',
+    );
+    expect(buildWorkflow).toContain(
+      'Join-Path $roamingRoot "io.github.turboznik.dictum"',
+    );
+    expect(buildWorkflow).toContain("$secondInstance.WaitForExit(15000)");
   });
 
   test("maintained translations use Dictum except for the Handy Keys feature name", async () => {

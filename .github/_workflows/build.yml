@@ -885,6 +885,130 @@ jobs:
             }
             Assert-PackageContents -Root $installDir -Label "Installed NSIS"
             Remove-Item -Recurse -Force $installDir
+
+            # Exercise a normal install at the OS integration seam. This verifies
+            # the installed binary, Add/Remove Programs identity, and shortcuts
+            # without relying only on bundle configuration or archive contents.
+            $normalInstallDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
+            try {
+              $proc = Start-Process -FilePath $pkg.FullName -ArgumentList @("/S", "/D=$normalInstallDir") -Wait -PassThru
+              if ($proc.ExitCode -ne 0) {
+                throw "Silent normal install failed for $($pkg.FullName) with exit code $($proc.ExitCode)"
+              }
+
+              Assert-PackageContents -Root $normalInstallDir -Label "Normally installed NSIS"
+              if (Test-Path (Join-Path $normalInstallDir "portable")) {
+                throw "Normal NSIS install unexpectedly created a portable marker"
+              }
+
+              $uninstallKey = Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Dictum" -ErrorAction Stop
+              if ($uninstallKey.DisplayName -ne "Dictum" -or
+                  $uninstallKey.DisplayVersion -ne "0.1.0" -or
+                  $uninstallKey.Publisher -ne "turboznik" -or
+                  $uninstallKey.MainBinaryName -ne "dictum.exe") {
+                throw "Normal NSIS install has incorrect Add/Remove Programs identity"
+              }
+
+              $shell = New-Object -ComObject WScript.Shell
+              $startMenuShortcut = Join-Path $shell.SpecialFolders("Programs") "Dictum.lnk"
+              $desktopShortcut = Join-Path $shell.SpecialFolders("Desktop") "Dictum.lnk"
+              foreach ($shortcutPath in @($startMenuShortcut, $desktopShortcut)) {
+                if (-not (Test-Path $shortcutPath)) {
+                  throw "Normal NSIS install is missing shortcut $shortcutPath"
+                }
+                $shortcut = $shell.CreateShortcut($shortcutPath)
+                if ([System.IO.Path]::GetFullPath($shortcut.TargetPath) -ne
+                    [System.IO.Path]::GetFullPath((Join-Path $normalInstallDir "dictum.exe"))) {
+                  throw "Shortcut $shortcutPath does not target dictum.exe"
+                }
+              }
+
+              # Launch with isolated Windows profile roots so the audit can prove
+              # Dictum creates its own data namespace and leaves Handy data alone.
+              $runtimeRoot = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
+              $roamingRoot = Join-Path $runtimeRoot "Roaming"
+              $localRoot = Join-Path $runtimeRoot "Local"
+              $handyRoot = Join-Path $roamingRoot "com.pais.handy"
+              New-Item -ItemType Directory -Path $handyRoot -Force | Out-Null
+              $handySentinel = Join-Path $handyRoot "must-not-change.txt"
+              Set-Content -LiteralPath $handySentinel -Value "Handy data"
+
+              function New-IsolatedDictumProcess {
+                $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+                $startInfo.FileName = Join-Path $normalInstallDir "dictum.exe"
+                $startInfo.ArgumentList.Add("--no-tray")
+                $startInfo.UseShellExecute = $false
+                $startInfo.Environment["APPDATA"] = $roamingRoot
+                $startInfo.Environment["LOCALAPPDATA"] = $localRoot
+                return [System.Diagnostics.Process]::Start($startInfo)
+              }
+
+              $dictumProcess = New-IsolatedDictumProcess
+              try {
+                $deadline = [DateTime]::UtcNow.AddSeconds(30)
+                do {
+                  Start-Sleep -Milliseconds 500
+                  $dictumProcess.Refresh()
+                } while (-not $dictumProcess.HasExited -and
+                         $dictumProcess.MainWindowTitle -ne "Dictum" -and
+                         [DateTime]::UtcNow -lt $deadline)
+
+                if ($dictumProcess.HasExited) {
+                  throw "Normally installed dictum.exe exited before its window was ready"
+                }
+                if ($dictumProcess.ProcessName -ne "dictum" -or $dictumProcess.MainWindowTitle -ne "Dictum") {
+                  throw "Normally installed process or window title does not identify Dictum"
+                }
+
+                $secondInstance = New-IsolatedDictumProcess
+                try {
+                  if (-not $secondInstance.WaitForExit(15000)) {
+                    throw "A second Dictum instance did not forward to the running instance"
+                  }
+                  if ($dictumProcess.HasExited) {
+                    throw "The primary Dictum instance exited during the single-instance audit"
+                  }
+                } finally {
+                  if ($secondInstance -and -not $secondInstance.HasExited) {
+                    $secondInstance.Kill($true)
+                    $secondInstance.WaitForExit()
+                  }
+                }
+
+                $dictumDataRoot = Join-Path $roamingRoot "io.github.turboznik.dictum"
+                if (-not (Test-Path $dictumDataRoot)) {
+                  throw "Dictum did not create its independent app-data root"
+                }
+                if ((Get-Content -LiteralPath $handySentinel -Raw).Trim() -ne "Handy data" -or
+                    (Get-ChildItem -LiteralPath $handyRoot -Force).Count -ne 1) {
+                  throw "Launching Dictum modified the isolated Handy data root"
+                }
+              } finally {
+                if ($dictumProcess -and -not $dictumProcess.HasExited) {
+                  if (-not $dictumProcess.CloseMainWindow()) {
+                    $dictumProcess.Kill($true)
+                  }
+                  if (-not $dictumProcess.WaitForExit(10000)) {
+                    $dictumProcess.Kill($true)
+                    $dictumProcess.WaitForExit()
+                  }
+                }
+                if (Test-Path $runtimeRoot) {
+                  Remove-Item -Recurse -Force $runtimeRoot
+                }
+              }
+            } finally {
+              $uninstaller = Join-Path $normalInstallDir "uninstall.exe"
+              if (Test-Path $uninstaller) {
+                $uninstallProc = Start-Process -FilePath $uninstaller -ArgumentList "/S" -Wait -PassThru
+                if ($uninstallProc.ExitCode -ne 0) {
+                  throw "Silent NSIS uninstall failed with exit code $($uninstallProc.ExitCode)"
+                }
+              }
+              if (Test-Path $normalInstallDir) {
+                Remove-Item -Recurse -Force $normalInstallDir
+              }
+            }
           }
 
           # Administrative install extracts the MSI payload without elevation.
@@ -895,6 +1019,11 @@ jobs:
 
           foreach ($pkg in $msiPackages) {
             Write-Host "Auditing MSI package: $($pkg.FullName)"
+            $expectedArch = if ("${{ inputs.target }}" -like "aarch64*") { "arm64" } else { "x64" }
+            $expectedName = "Dictum_0.1.0_$($expectedArch)_en-US.msi"
+            if ($pkg.Name -ne $expectedName) {
+              throw "Expected MSI package $expectedName, found $($pkg.Name)"
+            }
             $installDir = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
             New-Item -ItemType Directory -Path $installDir | Out-Null
             $logFile = Join-Path $installDir "msi-admin-install.log"
