@@ -1,5 +1,7 @@
 # AGENTS.md
 
+> **Partial rebrand:** The migration from Handy to Dictum is intentionally incomplete. Do not assume that every remaining reference to Handy should be renamed. Handy remains the upstream foundation and may also appear in proper feature or dependency names; rebrand work is limited by the decisions documented in this repository. The intermediate rebrand is non-distributable because the updater intentionally remains pointed at Handy until the later distribution work is completed.
+
 This file provides guidance to AI coding assistants working with code in this repository.
 
 ## Development Commands
