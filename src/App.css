@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
 
+@font-face {
+  font-family: "Geist Pixel Square";
+  src: url("./assets/fonts/GeistPixel-Square.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* Register the shared color tokens (src/styles/theme.css) as Tailwind
    utilities */
 @theme inline {
@@ -96,12 +104,11 @@
   }
 }
 
-.logo-primary {
-  fill: var(--color-logo-primary);
-}
-
-.logo-stroke {
-  fill: var(--color-logo-stroke);
-  stroke: var(--color-logo-stroke);
-  stroke-width: 1;
+.dictum-wordmark {
+  color: var(--color-logo-primary);
+  font-family: "Geist Pixel Square", sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
 }

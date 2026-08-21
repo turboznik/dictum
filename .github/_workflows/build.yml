@@ -19,7 +19,7 @@ on:
       asset-prefix:
         required: false
         type: string
-        default: "handy"
+        default: "dictum"
       asset-name-pattern:
         required: false
         type: string
@@ -298,7 +298,7 @@ jobs:
           #     statically linking libomp.
           echo "TRANSCRIBE_CMAKE_ARGS=-DGGML_NATIVE=OFF -DGGML_OPENMP=OFF" >> $env:GITHUB_ENV
 
-      # Bundle the VC++ runtime app-local so Handy starts on machines without a
+      # Bundle the VC++ runtime app-local so Dictum starts on machines without a
       # current Microsoft redistributable. build.rs stages DLLs from these dirs
       # into transcribe-libs/, using the same VS install that compiled the code.
       # x64 also needs vcomp140.dll for ggml OpenMP; ARM64 disables OpenMP.
@@ -330,8 +330,8 @@ jobs:
             }
             $dirs = "$($crt.FullName);$($omp.FullName)"
           }
-          Write-Host "HANDY_VC_REDIST_DIRS=$dirs"
-          Add-Content -Path $env:GITHUB_ENV -Value "HANDY_VC_REDIST_DIRS=$dirs"
+          Write-Host "DICTUM_VC_REDIST_DIRS=$dirs"
+          Add-Content -Path $env:GITHUB_ENV -Value "DICTUM_VC_REDIST_DIRS=$dirs"
 
       # MSI packaging verifies bundled .dll/.exe resources with signtool before
       # custom signing. Tauri's SDK lookup has no ARM64 host mapping, so pass
@@ -405,7 +405,7 @@ jobs:
       # MLAS runtime CPU dispatch, so it runs everywhere and dispatches to AVX2/AVX-512
       # kernels when present (perf parity on capable CPUs). build.rs stages
       # onnxruntime.dll into transcribe-libs/, which tauri.windows.conf.json bundles
-      # beside Handy.exe. ARM64 is excluded (all modern CPUs; keeps its static
+      # beside Dictum.exe. ARM64 is excluded (all modern CPUs; keeps its static
       # ORT posture).
       # NOTE: sourced from Microsoft's GitHub release; can be re-hosted on
       # blob.handy.computer to match the macOS/Linux steps.
@@ -831,9 +831,9 @@ jobs:
           function Assert-PackageContents {
             param([string]$Root, [string]$Label)
 
-            $handy = Get-ChildItem $Root -Filter "handy.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if (-not $handy) {
-              throw "$Label package is missing handy.exe"
+            $dictum = Get-ChildItem $Root -Filter "dictum.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if (-not $dictum) {
+              throw "$Label package is missing dictum.exe"
             }
             foreach ($dll in $stagedDlls) {
               if (-not (Get-ChildItem $Root -Filter $dll.Name -Recurse -ErrorAction SilentlyContinue)) {
@@ -841,10 +841,10 @@ jobs:
               }
             }
 
-            $deviceOutput = (& $handy.FullName --list-devices | Out-String)
+            $deviceOutput = (& $dictum.FullName --list-devices | Out-String)
             $deviceOutput | Write-Host
             if ($LASTEXITCODE -ne 0) {
-              throw "$Label handy.exe --list-devices failed"
+              throw "$Label dictum.exe --list-devices failed"
             }
             if ("${{ inputs.target }}" -like "aarch64*" -and $deviceOutput -match "kind=(vulkan|cuda|metal|gpu)") {
               throw "$Label Windows ARM64 package unexpectedly exposed a GPU compute device"

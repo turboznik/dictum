@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { commands } from "@/bindings";
 import { SettingContainer } from "../../ui/SettingContainer";
 
 interface DebugPathsProps {
@@ -12,11 +13,28 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
   grouped = false,
 }) => {
   const { t } = useTranslation();
+  const [appDataDir, setAppDataDir] = useState("");
+  const [logDir, setLogDir] = useState("");
+
+  useEffect(() => {
+    Promise.all([commands.getAppDirPath(), commands.getLogDirPath()]).then(
+      ([appDataResult, logResult]) => {
+        if (appDataResult.status === "ok") setAppDataDir(appDataResult.data);
+        if (logResult.status === "ok") setLogDir(logResult.data);
+      },
+    );
+  }, []);
+
+  const joinPath = (base: string, child: string) => {
+    if (!base) return "";
+    const separator = base.includes("\\") ? "\\" : "/";
+    return `${base.replace(/[\\/]$/u, "")}${separator}${child}`;
+  };
 
   return (
     <SettingContainer
-      title="Debug Paths"
-      description="Display internal file paths and directories for debugging purposes"
+      title={t("settings.debug.paths.title")}
+      description={t("settings.debug.paths.description")}
       descriptionMode={descriptionMode}
       grouped={grouped}
     >
@@ -25,26 +43,27 @@ export const DebugPaths: React.FC<DebugPathsProps> = ({
           <span className="font-medium">
             {t("settings.debug.paths.appData")}
           </span>{" "}
-          {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span className="font-mono text-xs select-text">%APPDATA%/handy</span>
+          <span className="font-mono text-xs select-text">{appDataDir}</span>
         </div>
         <div>
           <span className="font-medium">
             {t("settings.debug.paths.models")}
           </span>{" "}
-          {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className="font-mono text-xs select-text">
-            %APPDATA%/handy/models
+            {joinPath(appDataDir, "models")}
           </span>
         </div>
         <div>
           <span className="font-medium">
             {t("settings.debug.paths.settings")}
           </span>{" "}
-          {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className="font-mono text-xs select-text">
-            %APPDATA%/handy/settings_store.json
+            {joinPath(appDataDir, "settings_store.json")}
           </span>
+        </div>
+        <div>
+          <span className="font-medium">{t("settings.debug.paths.logs")}</span>{" "}
+          <span className="font-mono text-xs select-text">{logDir}</span>
         </div>
       </div>
     </SettingContainer>

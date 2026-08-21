@@ -2,7 +2,7 @@ use clap::Parser;
 use std::path::PathBuf;
 
 #[derive(Parser, Debug, Clone, Default)]
-#[command(name = "handy", about = "Handy - Speech to Text")]
+#[command(name = "dictum", about = "Dictum - Speech to Text")]
 pub struct CliArgs {
     /// Start with the main window hidden
     #[arg(long)]
@@ -60,4 +60,20 @@ pub struct CliArgs {
     /// Emit --transcribe-file results as JSON.
     #[arg(long)]
     pub json: bool,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::CliArgs;
+    use clap::CommandFactory;
+
+    #[test]
+    fn cli_uses_dictum_product_identity() {
+        let command = CliArgs::command();
+        assert_eq!(command.get_name(), "dictum");
+        assert_eq!(
+            command.get_about().map(ToString::to_string).as_deref(),
+            Some("Dictum - Speech to Text")
+        );
+    }
 }

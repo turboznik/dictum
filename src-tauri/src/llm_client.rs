@@ -143,13 +143,13 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
     headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
     headers.insert(
         REFERER,
-        HeaderValue::from_static("https://github.com/cjpais/Handy"),
+        HeaderValue::from_static("https://github.com/turboznik/dictum"),
     );
     headers.insert(
         USER_AGENT,
-        HeaderValue::from_static("Handy/1.0 (+https://github.com/cjpais/Handy)"),
+        HeaderValue::from_static("Dictum/0.1 (+https://github.com/turboznik/dictum)"),
     );
-    headers.insert("X-Title", HeaderValue::from_static("Handy"));
+    headers.insert("X-Title", HeaderValue::from_static("Dictum"));
 
     // Provider-specific auth headers
     if !api_key.is_empty() {
@@ -666,6 +666,21 @@ mod tests {
     fn requests_explicitly_disable_streaming() {
         let json = request_json(ReasoningParams::default());
         assert_eq!(json["stream"], false);
+    }
+
+    #[test]
+    fn outbound_client_headers_identify_dictum() {
+        let headers = build_headers(&provider("custom", "http://localhost"), "").unwrap();
+
+        assert_eq!(headers.get("X-Title").unwrap(), "Dictum");
+        assert_eq!(
+            headers.get(USER_AGENT).unwrap(),
+            "Dictum/0.1 (+https://github.com/turboznik/dictum)"
+        );
+        assert_eq!(
+            headers.get(REFERER).unwrap(),
+            "https://github.com/turboznik/dictum"
+        );
     }
 
     #[test]

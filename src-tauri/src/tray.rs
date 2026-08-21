@@ -40,7 +40,7 @@ impl CurrentTrayIconState {
 pub enum AppTheme {
     Dark,
     Light,
-    Colored, // Pink/colored theme for Linux
+    Colored, // Blue/colored theme for Linux
 }
 
 /// Gets the current app theme, with Linux defaulting to Colored theme
@@ -117,7 +117,7 @@ pub fn get_icon_path(theme: AppTheme, state: TrayIconState, warning: bool) -> &'
         (AppTheme::Light, TrayIconState::Idle) => "resources/tray_idle_dark.png",
         (AppTheme::Light, TrayIconState::Recording) => "resources/tray_recording_dark.png",
         (AppTheme::Light, TrayIconState::Transcribing) => "resources/tray_transcribing_dark.png",
-        // Colored theme uses pink icons (for Linux)
+        // Colored theme uses blue icons (for Linux)
         (AppTheme::Colored, TrayIconState::Idle) => "resources/handy.png",
         (AppTheme::Colored, TrayIconState::Recording) => "resources/recording.png",
         (AppTheme::Colored, TrayIconState::Transcribing) => "resources/transcribing.png",
@@ -175,9 +175,9 @@ pub fn tray_tooltip() -> String {
 
 fn version_label() -> String {
     if cfg!(debug_assertions) {
-        format!("Handy v{} (Dev)", env!("CARGO_PKG_VERSION"))
+        format!("Dictum v{} (Dev)", env!("CARGO_PKG_VERSION"))
     } else {
-        format!("Handy v{}", env!("CARGO_PKG_VERSION"))
+        format!("Dictum v{}", env!("CARGO_PKG_VERSION"))
     }
 }
 
@@ -383,7 +383,7 @@ pub fn copy_last_transcript(app: &AppHandle) {
 
 #[cfg(test)]
 mod tests {
-    use super::{last_transcript_text, load_tray_icon};
+    use super::{last_transcript_text, load_tray_icon, version_label};
     use crate::managers::history::HistoryEntry;
 
     fn build_entry(transcription: &str, post_processed: Option<&str>) -> HistoryEntry {
@@ -422,5 +422,10 @@ mod tests {
         let dir = tempfile::tempdir().expect("failed to create tempdir");
         let missing = dir.path().join("does_not_exist.png");
         assert!(load_tray_icon(Ok(missing)).is_err());
+    }
+
+    #[test]
+    fn tray_version_uses_dictum_product_name() {
+        assert!(version_label().starts_with("Dictum v"));
     }
 }

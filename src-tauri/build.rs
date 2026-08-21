@@ -27,7 +27,7 @@ fn main() {
 
     // When ORT is dynamically linked (Windows CI sets ORT_LIB_LOCATION +
     // ORT_PREFER_DYNAMIC_LINK to a baseline ONNX Runtime), ship its onnxruntime.dll
-    // next to Handy.exe so the app loads our baseline build instead of statically
+    // next to Dictum.exe so the app loads our baseline build instead of statically
     // embedding pyke's /arch:AVX2 one (which crashes at startup on pre-Haswell CPUs).
     stage_onnxruntime_dll();
 
@@ -40,18 +40,18 @@ fn main() {
 /// Stage the MSVC runtime DLLs into `transcribe-libs/` for app-local deployment.
 ///
 /// Handy's native stack links the VC++ runtime dynamically (/MD). Shipping the
-/// DLLs beside `handy.exe` covers machines with no redistributable installed and
+/// DLLs beside `dictum.exe` covers machines with no redistributable installed and
 /// machines whose system redist is older than the CI toolset (issue #1527).
 ///
-/// Driven by `HANDY_VC_REDIST_DIRS`, set by CI to the redist dirs from the same
+/// Driven by `DICTUM_VC_REDIST_DIRS`, set by CI to the redist dirs from the same
 /// Visual Studio install that compiled the native code. Copies only the runtime
 /// DLL families Handy imports and no-ops when the env var is unset.
 fn stage_vc_runtime_dlls() {
     use std::path::PathBuf;
 
-    println!("cargo:rerun-if-env-changed=HANDY_VC_REDIST_DIRS");
+    println!("cargo:rerun-if-env-changed=DICTUM_VC_REDIST_DIRS");
 
-    let Some(redist_dirs) = std::env::var_os("HANDY_VC_REDIST_DIRS") else {
+    let Some(redist_dirs) = std::env::var_os("DICTUM_VC_REDIST_DIRS") else {
         return;
     };
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
@@ -64,7 +64,7 @@ fn stage_vc_runtime_dlls() {
     let mut copied: Vec<String> = Vec::new();
     for dir in std::env::split_paths(&redist_dirs) {
         for entry in std::fs::read_dir(&dir)
-            .unwrap_or_else(|e| panic!("HANDY_VC_REDIST_DIRS: read {}: {e}", dir.display()))
+            .unwrap_or_else(|e| panic!("DICTUM_VC_REDIST_DIRS: read {}: {e}", dir.display()))
             .flatten()
         {
             let src = entry.path();
@@ -90,8 +90,8 @@ fn stage_vc_runtime_dlls() {
     for required in ["msvcp140.dll", "vcruntime140.dll"] {
         if !copied.iter().any(|n| n == required) {
             panic!(
-                "HANDY_VC_REDIST_DIRS is set but {required} was not found in it; \
-                 the app-local VC++ runtime would be incomplete and Handy would \
+                "DICTUM_VC_REDIST_DIRS is set but {required} was not found in it; \
+                 the app-local VC++ runtime would be incomplete and Dictum would \
                  crash on machines without a current redist (issue #1527)"
             );
         }
@@ -104,7 +104,7 @@ fn stage_vc_runtime_dlls() {
 
 /// Copy the dynamically-linked ONNX Runtime `onnxruntime.dll` into the
 /// `transcribe-libs/` staging dir so `tauri.windows.conf.json` bundles it beside
-/// `Handy.exe` (Windows resolves DLLs from the executable's directory).
+/// `Dictum.exe` (Windows resolves DLLs from the executable's directory).
 ///
 /// No-op unless `ORT_PREFER_DYNAMIC_LINK` + `ORT_LIB_LOCATION` are set for a Windows
 /// target — i.e. the CI dynamic-link path. A plain static build (no env) skips this
@@ -159,7 +159,7 @@ fn stage_onnxruntime_dll() {
 /// this is a no-op there. `RUNTIME_DIR` (core libs) and `MODULE_DIR` (dlopen'd
 /// ggml modules) may be the same dir — the `BTreeSet` below dedups them.
 ///
-/// Where the staged dir lands: Windows bundles it beside `handy.exe` (DLLs resolve
+/// Where the staged dir lands: Windows bundles it beside `dictum.exe` (DLLs resolve
 /// from the exe dir); Linux deb/rpm map it into the app-private `/usr/lib/Handy`
 /// and the AppImage into `usr/lib`, both on the binary's rpath.
 fn stage_transcribe_runtime_libs() {

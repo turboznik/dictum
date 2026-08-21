@@ -1,8 +1,15 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Cog, FlaskConical, History, Info, Sparkles, Cpu } from "lucide-react";
-import HandyTextLogo from "./icons/HandyTextLogo";
-import HandyHand from "./icons/HandyHand";
+import {
+  Cog,
+  FlaskConical,
+  History,
+  Info,
+  Sparkles,
+  Cpu,
+  SlidersHorizontal,
+} from "lucide-react";
+import DictumWordmark from "./DictumWordmark";
 import { useSettings } from "../hooks/useSettings";
 import {
   GeneralSettings,
@@ -34,7 +41,7 @@ interface SectionConfig {
 export const SECTIONS_CONFIG = {
   general: {
     labelKey: "sidebar.general",
-    icon: HandyHand,
+    icon: SlidersHorizontal,
     component: GeneralSettings,
     enabled: () => true,
   },
@@ -94,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div className="flex flex-col w-40 h-full border-e border-mid-gray/20 items-center px-2">
-      <HandyTextLogo width={120} className="m-4" />
+      <DictumWordmark width={120} className="m-4" />
       <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-mid-gray/20">
         {availableSections.map((section) => {
           const Icon = section.icon;
@@ -103,6 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           return (
             <div
               key={section.id}
+              data-section-id={section.id}
               className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors ${
                 isActive
                   ? "bg-logo-primary/80"
@@ -110,7 +118,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
               onClick={() => onSectionChange(section.id)}
             >
-              <Icon width={24} height={24} className="shrink-0" />
+              <Icon
+                width={24}
+                height={24}
+                className="shrink-0"
+                data-testid={
+                  section.id === "general" ? "general-settings-icon" : undefined
+                }
+              />
               <p
                 className="text-sm font-medium truncate"
                 title={t(section.labelKey)}
