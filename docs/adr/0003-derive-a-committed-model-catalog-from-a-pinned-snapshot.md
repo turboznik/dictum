@@ -1,0 +1,3 @@
+# Derive a committed model catalog from a pinned snapshot
+
+Dictum keeps a complete, pinned upstream model catalog separate from the smaller Dictum model catalog embedded in the desktop app. An adopter maintains a model-ID allowlist and explicitly runs the `hf` task, which validates the selection, downloads only each selected model's default quantization for the model mirror, and deterministically replaces the committed Dictum model catalog. Keeping the generated catalog in Git preserves ordinary offline desktop builds, while keeping upstream refresh separate makes model and metadata changes deliberate and reviewable.
