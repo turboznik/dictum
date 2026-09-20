@@ -175,7 +175,7 @@
       "searchPlaceholder": "Modelle nach Namen suchen…",
       "rescan": {
         "label": "Neu scannen",
-        "tooltip": "Erneut nach Modellen scannen, die außerhalb von Dictum zum Modellordner oder Hugging-Face-Cache hinzugefügt wurden"
+        "tooltip": "Erneut nach kompatiblen Modellen suchen, die außerhalb von Dictum hinzugefügt wurden"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Tastenkürzel"
       },
       "api": {
-        "title": "API (OpenAI-kompatibel)",
+        "title": "Integration",
         "provider": {
           "title": "Anbieter",
           "description": "Wähle einen OpenAI-kompatiblen Anbieter."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Danksagungen",
+        "handy": {
+          "title": "Handy",
+          "details": "Die Open-Source-Grundlage, auf der Dictum aufbaut. Ursprünglich von CJ Pais entwickelt und gemeinsam mit Mitwirkenden weitergeführt."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Hochleistungs-Inferenz des Whisper-Spracherkennungsmodells von OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "unbekanntes Modell",
     "pasteFailedTitle": "Text konnte nicht eingefügt werden",
     "pasteFailed": "Der Text konnte nicht in die aktive Anwendung eingefügt werden.",
-    "transcriptionFailedTitle": "Transkription fehlgeschlagen"
+    "transcriptionFailedTitle": "Transkription fehlgeschlagen",
+    "postProcessFailedTitle": "Nachbearbeitung fehlgeschlagen",
+    "postProcessFailed": "Die ursprüngliche Transkription wurde beibehalten. Prüfen Sie den API-Schlüssel in den Nachbearbeitungseinstellungen."
   },
   "appLanguage": {
     "title": "Anwendungssprache",

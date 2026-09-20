@@ -175,7 +175,7 @@
       "searchPlaceholder": "Поиск моделей по имени…",
       "rescan": {
         "label": "Пересканировать",
-        "tooltip": "Пересканировать модели, добавленные в папку моделей или кэш Hugging Face вне Dictum"
+        "tooltip": "Пересканировать совместимые модели, добавленные вне Dictum"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Горячая клавиша"
       },
       "api": {
-        "title": "API (совместимый с OpenAI)",
+        "title": "Интеграция",
         "provider": {
           "title": "Поставщик",
           "description": "Выберите поставщика, совместимого с OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Благодарности",
+        "handy": {
+          "title": "Handy",
+          "details": "Открытая основа, на которой построен Dictum. Изначально создан CJ Pais и развивается вместе с участниками сообщества."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Высокопроизводительная модель автоматического распознавания речи OpenAI Whisper",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "неизвестная модель",
     "pasteFailedTitle": "Не удалось вставить текст",
     "pasteFailed": "Не удалось вставить текст в активное приложение.",
-    "transcriptionFailedTitle": "Ошибка транскрипции"
+    "transcriptionFailedTitle": "Ошибка транскрипции",
+    "postProcessFailedTitle": "Постобработка не удалась",
+    "postProcessFailed": "Исходная расшифровка сохранена. Проверьте API-ключ в настройках постобработки."
   },
   "appLanguage": {
     "title": "Язык приложения",

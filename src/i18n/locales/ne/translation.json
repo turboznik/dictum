@@ -215,7 +215,7 @@
       },
       "rescan": {
         "label": "फेरि स्क्यान गर्नुहोस्",
-        "tooltip": "Dictum बाहिरबाट मोडेल फोल्डर वा Hugging Face क्यासमा थपिएका मोडेलहरू फेरि स्क्यान गर्नुहोस्"
+        "tooltip": "Dictum बाहिर थपिएका उपयुक्त मोडेलहरू फेरि स्क्यान गर्नुहोस्"
       },
       "noModelsMatch": "यो फिल्टरसँग कुनै मोडेल मिल्दैन।"
     },
@@ -387,7 +387,7 @@
         "title": "हटकी"
       },
       "api": {
-        "title": "API (OpenAI अनुकूल)",
+        "title": "एकीकरण",
         "provider": {
           "title": "प्रदायक",
           "description": "OpenAI-अनुकूल प्रदायक चयन गर्नुहोस्।"
@@ -602,6 +602,10 @@
       },
       "acknowledgments": {
         "title": "आभार",
+        "handy": {
+          "title": "Handy",
+          "details": "Dictum जसमा आधारित छ, त्यो खुला स्रोत आधार। सुरुमा CJ Pais ले बनाएका र योगदानकर्ताहरूसँग मिलेर विकास गरिएको।"
+        },
         "ggml": {
           "title": "ggml",
           "description": "अन-डिभाइस मेसिन लर्निङ अनुमानका लागि उच्च-प्रदर्शन टेन्सर लाइब्रेरी",
@@ -657,7 +661,9 @@
     "modelLoadFailedUnknown": "अज्ञात मोडेल",
     "pasteFailedTitle": "टेक्स्ट पेस्ट गर्न सकिएन",
     "pasteFailed": "सक्रिय एपमा टेक्स्ट पेस्ट गर्न सकिएन।",
-    "transcriptionFailedTitle": "ट्रान्सक्रिप्सन गर्न सकिएन"
+    "transcriptionFailedTitle": "ट्रान्सक्रिप्सन गर्न सकिएन",
+    "postProcessFailedTitle": "पोस्ट-प्रोसेसिङ असफल भयो",
+    "postProcessFailed": "मूल ट्रान्सक्रिप्सन यथावत् राखियो। आफ्नो पोस्ट-प्रोसेसिङ सेटिङमा API कुञ्जी जाँच्नुहोस्।"
   },
   "appLanguage": {
     "title": "एपको भाषा",

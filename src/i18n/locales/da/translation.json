@@ -215,7 +215,7 @@
       },
       "rescan": {
         "label": "Søg igen",
-        "tooltip": "Søg igen efter modeller, der er tilføjet til modelmappen eller Hugging Face-cachen uden for Dictum"
+        "tooltip": "Søg igen efter kompatible modeller, der er tilføjet uden for Dictum"
       },
       "noModelsMatch": "Ingen modeller matcher dette filter."
     },
@@ -387,7 +387,7 @@
         "title": "Genvejstast"
       },
       "api": {
-        "title": "API (OpenAI-kompatibel)",
+        "title": "Integration",
         "provider": {
           "title": "Udbyder",
           "description": "Vælg en OpenAI-kompatibel udbyder."
@@ -602,6 +602,10 @@
       },
       "acknowledgments": {
         "title": "Anerkendelser",
+        "handy": {
+          "title": "Handy",
+          "details": "Det open source-fundament, som Dictum er bygget på. Oprindeligt skabt af CJ Pais og udviklet sammen med bidragydere."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Højtydende tensor-bibliotek til maskinlæringsinferens på enheden",
@@ -657,7 +661,9 @@
     "modelLoadFailedUnknown": "ukendt model",
     "pasteFailedTitle": "Kunne ikke indsætte tekst",
     "pasteFailed": "Teksten kunne ikke indsættes i det aktive program.",
-    "transcriptionFailedTitle": "Transskription mislykkedes"
+    "transcriptionFailedTitle": "Transskription mislykkedes",
+    "postProcessFailedTitle": "Efterbehandling mislykkedes",
+    "postProcessFailed": "Den oprindelige transskription blev bevaret. Tjek API-nøglen i dine efterbehandlingsindstillinger."
   },
   "appLanguage": {
     "title": "Applikationssprog",

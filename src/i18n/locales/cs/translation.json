@@ -175,7 +175,7 @@
       "searchPlaceholder": "Hledat modely podle názvu…",
       "rescan": {
         "label": "Znovu prohledat",
-        "tooltip": "Znovu prohledat modely přidané do složky modelů nebo mezipaměti Hugging Face mimo Dictum"
+        "tooltip": "Znovu prohledat kompatibilní modely přidané mimo Dictum"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Klávesová zkratka"
       },
       "api": {
-        "title": "API (kompatibilní s OpenAI)",
+        "title": "Integrace",
         "provider": {
           "title": "Poskytovatel",
           "description": "Vyberte poskytovatele kompatibilního s OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Poděkování",
+        "handy": {
+          "title": "Handy",
+          "details": "Open source základ, na kterém je Dictum postaven. Původně jej vytvořil CJ Pais a vyvíjí se společně s přispěvateli."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Vysoce výkonné inferenční zpracování modelu automatického rozpoznávání řeči Whisper od OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "neznámý model",
     "pasteFailedTitle": "Vložení textu se nezdařilo",
     "pasteFailed": "Text nebylo možné vložit do aktivní aplikace.",
-    "transcriptionFailedTitle": "Přepis selhal"
+    "transcriptionFailedTitle": "Přepis selhal",
+    "postProcessFailedTitle": "Následné zpracování selhalo",
+    "postProcessFailed": "Původní přepis byl zachován. Zkontrolujte API klíč v nastavení následného zpracování."
   },
   "appLanguage": {
     "title": "Jazyk aplikace",

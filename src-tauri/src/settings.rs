@@ -610,9 +610,18 @@ fn default_show_tray_icon() -> bool {
     true
 }
 
+/// Dictum post-processes through its own gateway, which the inherited "Custom"
+/// provider already knows how to talk to. Selecting it by default is what makes
+/// the Post Process tab's hidden provider/endpoint/model correct on a fresh
+/// install — the settings UI only surfaces the user's gateway API key.
 fn default_post_process_provider_id() -> String {
-    "openai".to_string()
+    DICTUM_GATEWAY_PROVIDER_ID.to_string()
 }
+
+/// The inherited provider entry Dictum repurposes as its post-processing
+/// gateway. Kept as `custom` rather than a new id so the existing base-URL and
+/// API-key plumbing applies unchanged.
+pub const DICTUM_GATEWAY_PROVIDER_ID: &str = "custom";
 
 fn default_post_process_providers() -> Vec<PostProcessProvider> {
     let mut providers = vec![
@@ -692,14 +701,21 @@ fn default_post_process_providers() -> Vec<PostProcessProvider> {
         supports_structured_output: true,
     });
 
-    // Custom provider always comes last
+    // Dictum's post-processing gateway, carried by the inherited "Custom"
+    // provider slot. Unlike upstream's user-editable Custom entry, every field
+    // here is Dictum's to set: the endpoint comes from the shared config, the
+    // base URL is not editable, and there is no models endpoint because the
+    // gateway serves exactly one model and ignores any other request.
     providers.push(PostProcessProvider {
-        id: "custom".to_string(),
-        label: "Custom".to_string(),
-        base_url: "http://localhost:11434/v1".to_string(),
-        allow_base_url_edit: true,
-        models_endpoint: Some("/models".to_string()),
-        supports_structured_output: false,
+        id: DICTUM_GATEWAY_PROVIDER_ID.to_string(),
+        label: "Dictum".to_string(),
+        base_url: crate::dictum_config::POST_PROCESS_BASE_URL.clone(),
+        allow_base_url_edit: false,
+        models_endpoint: None,
+        // The gateway forwards the structured-output schema to OpenRouter, so
+        // post-processing takes the structured path rather than the legacy
+        // text fallback.
+        supports_structured_output: true,
     });
 
     providers
@@ -716,6 +732,11 @@ fn default_post_process_api_keys() -> SecretMap {
 fn default_model_for_provider(provider_id: &str) -> String {
     if provider_id == APPLE_INTELLIGENCE_PROVIDER_ID {
         return APPLE_INTELLIGENCE_DEFAULT_MODEL_ID.to_string();
+    }
+    if provider_id == DICTUM_GATEWAY_PROVIDER_ID {
+        // The gateway forces this same model regardless of what it is sent, so
+        // this only keeps the desktop app's request honest.
+        return crate::dictum_config::post_process_model().to_string();
     }
     String::new()
 }

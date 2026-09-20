@@ -175,7 +175,7 @@
       "searchPlaceholder": "Szukaj modeli według nazwy…",
       "rescan": {
         "label": "Skanuj ponownie",
-        "tooltip": "Skanuj ponownie w poszukiwaniu modeli dodanych do folderu modeli lub pamięci podręcznej Hugging Face poza Dictum"
+        "tooltip": "Skanuj ponownie w poszukiwaniu zgodnych modeli dodanych poza Dictum"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Skrót klawiszowy"
       },
       "api": {
-        "title": "API (zgodne z OpenAI)",
+        "title": "Integracja",
         "provider": {
           "title": "Dostawca",
           "description": "Wybierz dostawcę zgodnego z OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Podziękowania",
+        "handy": {
+          "title": "Handy",
+          "details": "Otwartoźródłowa podstawa, na której zbudowano Dictum. Pierwotnie stworzony przez CJ Pais i rozwijany wraz ze współtwórcami."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Wydajne wykonywanie modelu rozpoznawania mowy Whisper od OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "nieznany model",
     "pasteFailedTitle": "Nie udało się wkleić tekstu",
     "pasteFailed": "Nie można było wkleić tekstu do aktywnej aplikacji.",
-    "transcriptionFailedTitle": "Transkrypcja nie powiodła się"
+    "transcriptionFailedTitle": "Transkrypcja nie powiodła się",
+    "postProcessFailedTitle": "Przetwarzanie końcowe nie powiodło się",
+    "postProcessFailed": "Zachowano oryginalną transkrypcję. Sprawdź klucz API w ustawieniach przetwarzania końcowego."
   },
   "appLanguage": {
     "title": "Język aplikacji",

@@ -216,7 +216,7 @@
       "searchPlaceholder": "Buscar modelos por nome…",
       "rescan": {
         "label": "Reescanear",
-        "tooltip": "Reescaneia em busca de modelos adicionados à pasta de modelos ou ao cache do Hugging Face fora do Dictum"
+        "tooltip": "Reescaneia em busca de modelos compatíveis adicionados fora do Dictum"
       }
     },
     "sound": {
@@ -387,7 +387,7 @@
         "title": "Tecla de atalho"
       },
       "api": {
-        "title": "API (Compatível com OpenAI)",
+        "title": "Integração",
         "provider": {
           "title": "Provedor",
           "description": "Selecione um provedor compatível com OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Agradecimentos",
+        "handy": {
+          "title": "Handy",
+          "details": "A base de código aberto sobre a qual o Dictum foi construído. Criado originalmente por CJ Pais e desenvolvido com colaboradores."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Inferência de alto desempenho do modelo de reconhecimento automático de fala Whisper da OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "modelo desconhecido",
     "pasteFailedTitle": "Falha ao colar o texto",
     "pasteFailed": "Não foi possível colar o texto no aplicativo ativo.",
-    "transcriptionFailedTitle": "Falha na transcrição"
+    "transcriptionFailedTitle": "Falha na transcrição",
+    "postProcessFailedTitle": "Falha no pós-processamento",
+    "postProcessFailed": "A transcrição original foi mantida. Verifique a chave de API nas configurações de pós-processamento."
   },
   "appLanguage": {
     "title": "Idioma da Aplicação",

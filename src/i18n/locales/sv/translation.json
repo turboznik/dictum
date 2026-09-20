@@ -216,7 +216,7 @@
       "searchPlaceholder": "Sök modeller efter namn…",
       "rescan": {
         "label": "Skanna om",
-        "tooltip": "Skanna om efter modeller som lagts till i modellmappen eller Hugging Face-cachen utanför Dictum"
+        "tooltip": "Skanna om efter kompatibla modeller som lagts till utanför Dictum"
       }
     },
     "sound": {
@@ -387,7 +387,7 @@
         "title": "Snabbkommando"
       },
       "api": {
-        "title": "API (OpenAI-kompatibelt)",
+        "title": "Integration",
         "provider": {
           "title": "Leverantör",
           "description": "Välj en OpenAI-kompatibel leverantör."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Tack till",
+        "handy": {
+          "title": "Handy",
+          "details": "Den öppna källkod som Dictum bygger på. Ursprungligen skapad av CJ Pais och utvecklad tillsammans med bidragsgivare."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Högpresterande inferens av OpenAI:s Whisper-modell för automatisk taligenkänning",
@@ -654,7 +658,9 @@
     "noInputDevice": "Ingen ljudenhet hittades. Anslut en mikrofon eller ett headset och försök igen.",
     "pasteFailedTitle": "Det gick inte att klistra in texten",
     "pasteFailed": "Texten kunde inte klistras in i det aktiva programmet.",
-    "transcriptionFailedTitle": "Transkriptionen misslyckades"
+    "transcriptionFailedTitle": "Transkriptionen misslyckades",
+    "postProcessFailedTitle": "Efterbearbetningen misslyckades",
+    "postProcessFailed": "Den ursprungliga transkriberingen behölls. Kontrollera API-nyckeln i dina efterbearbetningsinställningar."
   },
   "appLanguage": {
     "title": "Applikationsspråk",

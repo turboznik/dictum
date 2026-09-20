@@ -216,7 +216,7 @@
       "searchPlaceholder": "חיפוש מודלים לפי שם…",
       "rescan": {
         "label": "סריקה מחדש",
-        "tooltip": "סריקה מחדש לאיתור מודלים שנוספו לתיקיית המודלים או למטמון של Hugging Face מחוץ ל-Dictum"
+        "tooltip": "סריקה מחדש לאיתור מודלים תואמים שנוספו מחוץ ל-Dictum"
       }
     },
     "sound": {
@@ -387,7 +387,7 @@
         "title": "קיצור מקשים"
       },
       "api": {
-        "title": "API (תואם OpenAI)",
+        "title": "אינטגרציה",
         "provider": {
           "title": "ספק",
           "description": "בחר ספק שתואם ל-OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "תודות",
+        "handy": {
+          "title": "Handy",
+          "details": "הבסיס בקוד פתוח שעליו נבנה Dictum. נוצר במקור על ידי CJ Pais ומפותח יחד עם התורמים."
+        },
         "ggml": {
           "title": "ggml",
           "description": "הסקה מהירה לביצועים גבוהים עבור מודל זיהוי הדיבור Whisper של OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "מודל לא ידוע",
     "pasteFailedTitle": "ההדבקה נכשלה",
     "pasteFailed": "לא ניתן היה להדביק את הטקסט ביישום הפעיל.",
-    "transcriptionFailedTitle": "התמלול נכשל"
+    "transcriptionFailedTitle": "התמלול נכשל",
+    "postProcessFailedTitle": "עיבוד לאחר התמלול נכשל",
+    "postProcessFailed": "התמלול המקורי נשמר. בדוק את מפתח ה-API בהגדרות העיבוד שלאחר התמלול."
   },
   "appLanguage": {
     "title": "שפת האפליקציה",

@@ -13,9 +13,7 @@ import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import SecureInputWarning from "./components/SecureInputWarning";
 import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
-import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
-import { WhatsNewGate } from "./components/whats-new";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
 import { commands } from "@/bindings";
@@ -146,6 +144,24 @@ function App() {
     const unlisten = listen<string>("transcription-error", (event) => {
       toast.error(t("errors.transcriptionFailedTitle"), {
         description: event.payload,
+      });
+    });
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, [t]);
+
+  // Listen for post-processing failures and show a toast.
+  //
+  // Dictum does not validate the gateway API key when it is entered, so a
+  // mistyped or rotated key would otherwise be invisible: the inherited
+  // behaviour silently falls back to the raw transcription and records the
+  // failure only in dictum.log, which looks exactly like post-processing doing
+  // nothing. The detail stays in the log; this says that something failed.
+  useEffect(() => {
+    const unlisten = listen("post-process-error", () => {
+      toast.error(t("errors.postProcessFailedTitle"), {
+        description: t("errors.postProcessFailed"),
       });
     });
     return () => {
@@ -294,9 +310,11 @@ function App() {
         dir={direction}
         className="h-screen flex flex-col select-none cursor-default"
       >
-        <ErrorBoundary context="What's New">
-          <WhatsNewGate />
-        </ErrorBoundary>
+        {/*
+          Dictum does not surface the inherited release-note gate: the
+          WhatsNewGate machinery stays in the tree but is never mounted, so no
+          setting or debug affordance can show upstream Handy release notes.
+        */}
         {/* Main content area that takes remaining space */}
         <div className="flex-1 flex overflow-hidden">
           <Sidebar

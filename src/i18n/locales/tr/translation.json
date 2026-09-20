@@ -175,7 +175,7 @@
       "searchPlaceholder": "Modelleri ada göre ara…",
       "rescan": {
         "label": "Yeniden Tara",
-        "tooltip": "Dictum dışında modeller klasörüne veya Hugging Face önbelleğine eklenen modelleri yeniden tara"
+        "tooltip": "Dictum dışında eklenen uyumlu modelleri yeniden tara"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Kısayol Tuşu"
       },
       "api": {
-        "title": "API (OpenAI Uyumlu)",
+        "title": "Entegrasyon",
         "provider": {
           "title": "Sağlayıcı",
           "description": "OpenAI uyumlu bir sağlayıcı seçin."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Teşekkürler",
+        "handy": {
+          "title": "Handy",
+          "details": "Dictum'un üzerine kurulduğu açık kaynaklı temel. Başlangıçta CJ Pais tarafından oluşturuldu ve katkıda bulunanlarla birlikte geliştirildi."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Cihaz üzerinde makine öğrenmesi çıkarımı için yüksek performanslı tensör kütüphanesi",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "bilinmeyen model",
     "pasteFailedTitle": "Metin yapıştırılamadı",
     "pasteFailed": "Metin etkin uygulamaya yapıştırılamadı.",
-    "transcriptionFailedTitle": "Transkripsiyon başarısız oldu"
+    "transcriptionFailedTitle": "Transkripsiyon başarısız oldu",
+    "postProcessFailedTitle": "Son işleme başarısız oldu",
+    "postProcessFailed": "Özgün döküm korundu. Son işleme ayarlarınızdaki API anahtarını kontrol edin."
   },
   "appLanguage": {
     "title": "Uygulama Dili",

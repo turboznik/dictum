@@ -175,7 +175,7 @@
       "searchPlaceholder": "Tìm mô hình theo tên…",
       "rescan": {
         "label": "Quét lại",
-        "tooltip": "Quét lại các mô hình được thêm vào thư mục mô hình hoặc bộ nhớ đệm Hugging Face bên ngoài Dictum"
+        "tooltip": "Quét lại các mô hình tương thích được thêm bên ngoài Dictum"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Phím tắt"
       },
       "api": {
-        "title": "API (Tương thích OpenAI)",
+        "title": "Tích hợp",
         "provider": {
           "title": "Nhà cung cấp",
           "description": "Chọn một nhà cung cấp tương thích OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Lời cảm ơn",
+        "handy": {
+          "title": "Handy",
+          "details": "Nền tảng mã nguồn mở mà Dictum được xây dựng trên đó. Ban đầu do CJ Pais tạo ra và được phát triển cùng các cộng tác viên."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Suy luận hiệu suất cao của mô hình nhận dạng giọng nói tự động Whisper của OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "mô hình không xác định",
     "pasteFailedTitle": "Không thể dán văn bản",
     "pasteFailed": "Không thể dán văn bản vào ứng dụng đang hoạt động.",
-    "transcriptionFailedTitle": "Phiên âm thất bại"
+    "transcriptionFailedTitle": "Phiên âm thất bại",
+    "postProcessFailedTitle": "Xử lý sau khi phiên âm thất bại",
+    "postProcessFailed": "Bản phiên âm gốc đã được giữ nguyên. Hãy kiểm tra khóa API trong cài đặt xử lý sau."
   },
   "appLanguage": {
     "title": "Ngôn ngữ ứng dụng",

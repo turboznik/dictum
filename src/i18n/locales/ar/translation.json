@@ -364,7 +364,7 @@
         "title": "مفتاح الاختصار"
       },
       "api": {
-        "title": "API (متوافق مع OpenAI)",
+        "title": "التكامل",
         "provider": {
           "title": "المزود",
           "description": "اختر مزوداً متوافقاً مع OpenAI."
@@ -575,6 +575,10 @@
       },
       "acknowledgments": {
         "title": "شكر وتقدير",
+        "handy": {
+          "title": "Handy",
+          "details": "الأساس مفتوح المصدر الذي بُني عليه Dictum. أنشأه في الأصل CJ Pais وجرى تطويره بمساهمة المساهمين."
+        },
         "ggml": {
           "title": "ggml",
           "description": "استنتاج عالي الأداء لنموذج التعرف التلقائي على الكلام Whisper من OpenAI",
@@ -606,7 +610,7 @@
       "searchPlaceholder": "ابحث عن النماذج بالاسم…",
       "rescan": {
         "label": "إعادة الفحص",
-        "tooltip": "إعادة الفحص بحثًا عن النماذج المضافة إلى مجلد النماذج أو ذاكرة Hugging Face التخزينية المؤقتة خارج Dictum"
+        "tooltip": "إعادة الفحص بحثًا عن النماذج المتوافقة المضافة خارج Dictum"
       }
     }
   },
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "نموذج غير معروف",
     "pasteFailedTitle": "فشل لصق النص",
     "pasteFailed": "تعذر لصق النص في التطبيق النشط.",
-    "transcriptionFailedTitle": "فشل التفريغ النصي"
+    "transcriptionFailedTitle": "فشل التفريغ النصي",
+    "postProcessFailedTitle": "فشلت المعالجة اللاحقة",
+    "postProcessFailed": "تم الاحتفاظ بالنص الأصلي. تحقّق من مفتاح API في إعدادات المعالجة اللاحقة."
   },
   "appLanguage": {
     "title": "لغة التطبيق",

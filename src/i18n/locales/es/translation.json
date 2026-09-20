@@ -175,7 +175,7 @@
       "searchPlaceholder": "Buscar modelos por nombre…",
       "rescan": {
         "label": "Volver a escanear",
-        "tooltip": "Vuelve a escanear en busca de modelos añadidos a la carpeta de modelos o a la caché de Hugging Face fuera de Dictum"
+        "tooltip": "Vuelve a escanear en busca de modelos compatibles añadidos fuera de Dictum"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "Tecla de acceso rápido"
       },
       "api": {
-        "title": "API (compatible con OpenAI)",
+        "title": "Integración",
         "provider": {
           "title": "Proveedor",
           "description": "Selecciona un proveedor compatible con OpenAI."
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Reconocimientos",
+        "handy": {
+          "title": "Handy",
+          "details": "La base de código abierto sobre la que está construido Dictum. Creado originalmente por CJ Pais y desarrollado junto a sus colaboradores."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Biblioteca de tensores de alto rendimiento para inferencia de aprendizaje automático en el dispositivo",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "modelo desconocido",
     "pasteFailedTitle": "Error al pegar el texto",
     "pasteFailed": "No se pudo pegar el texto en la aplicación activa.",
-    "transcriptionFailedTitle": "Error de transcripción"
+    "transcriptionFailedTitle": "Error de transcripción",
+    "postProcessFailedTitle": "Error en el posprocesamiento",
+    "postProcessFailed": "Se mantuvo la transcripción original. Comprueba la clave de API en los ajustes de posprocesamiento."
   },
   "appLanguage": {
     "title": "Idioma de la aplicación",

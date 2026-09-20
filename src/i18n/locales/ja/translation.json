@@ -175,7 +175,7 @@
       "searchPlaceholder": "モデルを名前で検索…",
       "rescan": {
         "label": "再スキャン",
-        "tooltip": "Dictum を使わずに models フォルダーまたは Hugging Face キャッシュに追加されたモデルを再スキャンします"
+        "tooltip": "Dictum の外部で追加された互換モデルを再スキャンします"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "ショートカット"
       },
       "api": {
-        "title": "API (OpenAI 互換)",
+        "title": "連携",
         "provider": {
           "title": "プロバイダー",
           "description": "OpenAI 互換のプロバイダーを選択。"
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "謝辞",
+        "handy": {
+          "title": "Handy",
+          "details": "Dictum の基盤となっているオープンソースプロジェクトです。CJ Pais 氏が制作し、貢献者の皆様とともに開発されています。"
+        },
         "ggml": {
           "title": "ggml",
           "description": "オンデバイス機械学習推論のための高性能テンソルライブラリ",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "不明なモデル",
     "pasteFailedTitle": "テキストの貼り付けに失敗しました",
     "pasteFailed": "アクティブなアプリにテキストを貼り付けられませんでした。",
-    "transcriptionFailedTitle": "文字起こしに失敗しました"
+    "transcriptionFailedTitle": "文字起こしに失敗しました",
+    "postProcessFailedTitle": "後処理に失敗しました",
+    "postProcessFailed": "元の文字起こしがそのまま使用されました。後処理設定の API キーを確認してください。"
   },
   "appLanguage": {
     "title": "アプリの言語",

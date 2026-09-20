@@ -215,7 +215,7 @@
       },
       "rescan": {
         "label": "Rescan",
-        "tooltip": "Rescan for models added to the models folder or Hugging Face cache outside Dictum"
+        "tooltip": "Rescan for compatible models added outside Dictum"
       },
       "noModelsMatch": "No models match this filter."
     },
@@ -387,7 +387,7 @@
         "title": "Hotkey"
       },
       "api": {
-        "title": "API (OpenAI Compatible)",
+        "title": "Integration",
         "provider": {
           "title": "Provider",
           "description": "Select an OpenAI-compatible provider."
@@ -602,6 +602,10 @@
       },
       "acknowledgments": {
         "title": "Acknowledgments",
+        "handy": {
+          "title": "Handy",
+          "details": "The open-source foundation on which Dictum is built. Originally created by CJ Pais and developed with contributors."
+        },
         "ggml": {
           "title": "ggml",
           "description": "High-performance tensor library for on-device machine learning inference",
@@ -657,7 +661,9 @@
     "modelLoadFailedUnknown": "unknown model",
     "pasteFailedTitle": "Failed to Paste Text",
     "pasteFailed": "Text could not be pasted into the active application.",
-    "transcriptionFailedTitle": "Transcription Failed"
+    "transcriptionFailedTitle": "Transcription Failed",
+    "postProcessFailedTitle": "Post-Processing Failed",
+    "postProcessFailed": "The original transcription was kept. Check the API key in your post-processing settings."
   },
   "appLanguage": {
     "title": "Application Language",

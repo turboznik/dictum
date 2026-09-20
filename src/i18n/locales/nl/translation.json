@@ -215,7 +215,7 @@
       },
       "rescan": {
         "label": "Opnieuw scannen",
-        "tooltip": "Scannen naar modellen die buiten Dictum om zijn toegevoegd aan de modellenmap of Hugging Face-cache"
+        "tooltip": "Opnieuw scannen naar compatibele modellen die buiten Dictum om zijn toegevoegd"
       },
       "noModelsMatch": "Geen modellen voldoen aan dit filter."
     },
@@ -387,7 +387,7 @@
         "title": "Sneltoets"
       },
       "api": {
-        "title": "API (OpenAI-compatibel)",
+        "title": "Integratie",
         "provider": {
           "title": "Provider",
           "description": "Selecteer een OpenAI-compatibele provider."
@@ -602,6 +602,10 @@
       },
       "acknowledgments": {
         "title": "Dankbetuigingen",
+        "handy": {
+          "title": "Handy",
+          "details": "De opensourcebasis waarop Dictum is gebouwd. Oorspronkelijk gemaakt door CJ Pais en ontwikkeld samen met bijdragers."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Krachtige tensorbibliotheek voor lokale AI-verwerking",
@@ -657,7 +661,9 @@
     "modelLoadFailedUnknown": "onbekend model",
     "pasteFailedTitle": "Tekst plakken mislukt",
     "pasteFailed": "Tekst kon niet worden geplakt in de actieve applicatie.",
-    "transcriptionFailedTitle": "Transcriptie mislukt"
+    "transcriptionFailedTitle": "Transcriptie mislukt",
+    "postProcessFailedTitle": "Nabewerking mislukt",
+    "postProcessFailed": "De oorspronkelijke transcriptie is behouden. Controleer de API-sleutel in je nabewerkingsinstellingen."
   },
   "appLanguage": {
     "title": "Interfacetaal",

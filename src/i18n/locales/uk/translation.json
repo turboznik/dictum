@@ -216,7 +216,7 @@
       "searchPlaceholder": "Пошук моделей за назвою…",
       "rescan": {
         "label": "Пересканувати",
-        "tooltip": "Пересканувати моделі, додані до папки моделей або кешу Hugging Face поза межами Dictum"
+        "tooltip": "Пересканувати сумісні моделі, додані поза межами Dictum"
       }
     },
     "sound": {
@@ -387,7 +387,7 @@
         "title": "Гаряча клавіша"
       },
       "api": {
-        "title": "API (сумісний з OpenAI)",
+        "title": "Інтеграція",
         "provider": {
           "title": "Провайдер",
           "description": "Оберіть OpenAI-сумісного провайдера"
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "Подяки",
+        "handy": {
+          "title": "Handy",
+          "details": "Відкрита основа, на якій побудовано Dictum. Спочатку створений CJ Pais і розвивається разом із контриб'юторами."
+        },
         "ggml": {
           "title": "ggml",
           "description": "Високопродуктивний інференс моделі автоматичного розпізнавання мовлення Whisper від OpenAI",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "невідома модель",
     "pasteFailedTitle": "Не вдалося вставити текст",
     "pasteFailed": "Не вдалося вставити текст до активної програми.",
-    "transcriptionFailedTitle": "Помилка транскрипції"
+    "transcriptionFailedTitle": "Помилка транскрипції",
+    "postProcessFailedTitle": "Не вдалося виконати постобробку",
+    "postProcessFailed": "Початкову транскрипцію збережено. Перевірте ключ API в налаштуваннях постобробки."
   },
   "appLanguage": {
     "title": "Мова інтерфейсу",

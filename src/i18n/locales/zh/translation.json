@@ -175,7 +175,7 @@
       "searchPlaceholder": "按名称搜索模型…",
       "rescan": {
         "label": "重新扫描",
-        "tooltip": "重新扫描在 Dictum 之外添加到模型文件夹或 Hugging Face 缓存中的模型"
+        "tooltip": "重新扫描在 Dictum 之外添加的兼容模型"
       }
     },
     "general": {
@@ -387,7 +387,7 @@
         "title": "快捷键"
       },
       "api": {
-        "title": "API（兼容 OpenAI）",
+        "title": "集成",
         "provider": {
           "title": "提供商",
           "description": "选择一个兼容 OpenAI 的提供商。"
@@ -598,6 +598,10 @@
       },
       "acknowledgments": {
         "title": "致谢",
+        "handy": {
+          "title": "Handy",
+          "details": "Dictum 所基于的开源项目。最初由 CJ Pais 创建，并与众多贡献者共同开发。"
+        },
         "ggml": {
           "title": "ggml",
           "description": "OpenAI Whisper 自动语音识别模型的高性能推理",
@@ -654,7 +658,9 @@
     "modelLoadFailedUnknown": "未知模型",
     "pasteFailedTitle": "粘贴文本失败",
     "pasteFailed": "无法将文本粘贴到当前活动的应用程序中。",
-    "transcriptionFailedTitle": "转录失败"
+    "transcriptionFailedTitle": "转录失败",
+    "postProcessFailedTitle": "后处理失败",
+    "postProcessFailed": "已保留原始转录内容。请在后处理设置中检查 API 密钥。"
   },
   "appLanguage": {
     "title": "应用语言",

@@ -118,7 +118,23 @@ fn should_use_streaming_overlay(style: OverlayStyle, is_streaming: bool) -> bool
     style == OverlayStyle::Live && is_streaming
 }
 
-async fn post_process_transcription(settings: &AppSettings, transcription: &str) -> Option<String> {
+/// Tells the user that post-processing failed, without saying why.
+///
+/// Dictum does not validate the gateway credential when it is entered, so a
+/// mistyped or rotated key first shows up here. The inherited behaviour is to
+/// fall back to the raw transcription and log the reason, which is
+/// indistinguishable from post-processing being switched off. The detail stays
+/// in the log — it can name an endpoint or a provider error — and the user just
+/// learns that something went wrong and their text was kept.
+fn notify_post_process_failed(app: &AppHandle) {
+    let _ = app.emit("post-process-error", ());
+}
+
+async fn post_process_transcription(
+    app: &AppHandle,
+    settings: &AppSettings,
+    transcription: &str,
+) -> Option<String> {
     if is_blank_transcription(transcription) {
         debug!("Post-processing skipped because the transcription is empty");
         return None;
@@ -295,6 +311,7 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
             }
             Ok(None) => {
                 error!("LLM API response has no content");
+                notify_post_process_failed(app);
                 return None;
             }
             Err(e) => {
@@ -302,7 +319,8 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
                     "Structured output failed for provider '{}': {}. Falling back to legacy mode.",
                     provider.id, e
                 );
-                // Fall through to legacy mode below
+                // Deliberately silent: the legacy attempt below may still
+                // succeed, and warning about a recovered failure would be noise.
             }
         }
     }
@@ -331,6 +349,7 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
         }
         Ok(None) => {
             error!("LLM API response has no content");
+            notify_post_process_failed(app);
             None
         }
         Err(e) => {
@@ -339,6 +358,7 @@ async fn post_process_transcription(settings: &AppSettings, transcription: &str)
                 provider.id,
                 e
             );
+            notify_post_process_failed(app);
             None
         }
     }
@@ -440,7 +460,7 @@ pub(crate) async fn process_transcription_output(
     }
 
     if post_process {
-        if let Some(processed_text) = post_process_transcription(&settings, &final_text).await {
+        if let Some(processed_text) = post_process_transcription(app, &settings, &final_text).await {
             post_processed_text = Some(processed_text.clone());
             final_text = processed_text;
 
