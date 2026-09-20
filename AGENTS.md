@@ -129,6 +129,41 @@ Settings are stored using Tauri's store plugin with reactive updates:
 - Model preferences (Small/Medium/Turbo/Large Whisper variants)
 - Audio feedback and translation options
 
+## Dictum server (`server/`)
+
+A Deno service hosting the two things the desktop app must not reach directly. **The desktop app never contacts Hugging Face or OpenRouter.** See [`server/README.md`](server/README.md) for operation; the terms below are defined in [CONTEXT.md](CONTEXT.md).
+
+| Service                     | Base path                  | Reaches                       |
+| --------------------------- | -------------------------- | ----------------------------- |
+| **Model mirror**            | `/dictum/api/hf`           | nothing — serves offline files |
+| **Post-processing gateway** | `/dictum/api/post-process` | OpenRouter, per request        |
+
+**Shared endpoint config:** `dictum.config.json` at the repo root is the single source of truth. The desktop app compiles it in (`src-tauri/src/dictum_config.rs`); the server reads the same file at runtime (`server/config.ts`). Changing `serverBaseUrl` requires rebuilding the desktop app — the endpoint is part of a build's identity, not a user setting.
+
+**Desktop-side integration is deliberately minimal:**
+
+- Model downloads: `ApiBuilder::with_endpoint(...)` in `managers/model.rs` points `hf-hub` at the mirror. Everything else — cache layout, resume, ranged chunks — is unchanged, because the mirror implements the same `{repo}/resolve/{revision}/{file}` contract.
+- Post-processing: the inherited "Custom" provider slot is repurposed as the gateway in `settings.rs` (`DICTUM_GATEWAY_PROVIDER_ID`). No new client code.
+
+**Egress boundary:** the generated catalog's `mirrors` array is empty, and `download_model` refuses any URL that is not the Dictum server. The inherited legacy model table's hard-coded upstream URLs are therefore not downloadable — already-downloaded legacy models still load.
+
+### Model catalog pipeline
+
+Two catalogs, one generated from the other. See [`docs/adr/0003`](docs/adr/0003-derive-a-committed-model-catalog-from-a-pinned-snapshot.md).
+
+| File                                          | What it is                                     | Refreshed by                       |
+| --------------------------------------------- | ---------------------------------------------- | ---------------------------------- |
+| `src-tauri/src/catalog/catalog.original.json` | Pinned **upstream model catalog** (69 models)  | `scripts/gen_catalog.py` (contacts HF) |
+| `src-tauri/src/catalog/catalog.json`          | **Dictum model catalog** compiled into the app | `cd server && deno task hf`        |
+
+`server/scripts/hf/config.json` is the **model allowlist** — an array of model IDs. `deno task hf` validates every ID against the snapshot, **fails before writing anything** if one is bad, then regenerates `catalog.json` and downloads each model's default quantization into the mirror. Both outputs are committed; model files are not.
+
+Adding or removing a model is a deliberate, manual step: edit the allowlist, run the task, rebuild.
+
+### Development reset
+
+`scripts/reset-dictum-data.ps1` clears this machine's Dictum data to re-test the first-run experience. Backs up to a timestamped folder by default (`-Delete` to remove), keeps downloaded models unless `-IncludeModels`, requires Dictum to be closed, and never touches Handy's data or the shared Hugging Face cache.
+
 ### Single Instance Architecture
 
 The app enforces single instance behavior — launching when already running brings the settings window to front rather than creating a new process. Remote control flags (`--toggle-transcription`, etc.) work by launching a second instance that sends args to the running instance via `tauri_plugin_single_instance`, then exits.

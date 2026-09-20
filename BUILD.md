@@ -61,6 +61,47 @@ ORT_LIB_LOCATION=$(brew --prefix onnxruntime)/lib ORT_PREFER_DYNAMIC_LINK=1 bun 
 > [Windows build fails with path-limit errors](#windows-build-fails-with-path-limit-errors-msb3491--ftk1011--msb6003)
 > in Troubleshooting.
 
+##### Windows ARM64
+
+**A plain `bun run tauri build` does not work on ARM64.** ggml rejects MSVC
+codegen on ARM (`MSVC is not supported for ARM, use clang`), so the native
+build must be configured for clang-cl and Ninja. Additionally:
+
+- ARM64 is **CPU-only** — the Vulkan SDK above is not required.
+- LLVM must be installed and on `PATH` (`winget install LLVM.LLVM`, typically
+  `C:\Program Files\LLVM\bin`). The Visual Studio workload does not supply it.
+
+Build from an ARM64 developer environment
+(`VsDevCmd.bat -arch=arm64 -host_arch=arm64`) with the same configuration CI
+uses — see the `Configure cmake for ARM64 (Windows)` and
+`Locate VC++ runtime redist` steps in `.github/_workflows/build.yml`:
+
+```powershell
+$env:PATH = "C:\Program Files\LLVM\bin;$env:PATH"
+$env:CMAKE_GENERATOR           = 'Ninja'
+$env:CC                        = 'clang-cl'
+$env:CXX                       = 'clang-cl'
+$env:CMAKE_C_COMPILER          = 'clang-cl'
+$env:CMAKE_CXX_COMPILER        = 'clang-cl'
+$env:CMAKE_C_COMPILER_TARGET   = 'aarch64-pc-windows-msvc'
+$env:CMAKE_CXX_COMPILER_TARGET = 'aarch64-pc-windows-msvc'
+$env:CL                        = '/EHsc'
+$env:RC                        = 'llvm-rc'   # Microsoft rc.exe fails with RC2136 here
+$env:TRANSCRIBE_CMAKE_ARGS     = '-DGGML_NATIVE=OFF -DGGML_OPENMP=OFF'
+
+# App-local VC++ runtime. ARM64 needs the CRT only (OpenMP is disabled above).
+$env:DICTUM_VC_REDIST_DIRS = '<VS>\VC\Redist\MSVC\<version>\arm64\Microsoft.VC143.CRT'
+
+bun run tauri build --target aarch64-pc-windows-msvc --no-bundle
+```
+
+`--no-bundle` produces a directly runnable
+`src-tauri\target\aarch64-pc-windows-msvc\release\dictum.exe` plus its adjacent
+runtime DLLs, and needs no signing. A clean build takes roughly 12 minutes.
+
+Verify with `dictum.exe --list-devices`: expect exit code 0 and at least one
+`kind=cpu` device, with no GPU device.
+
 #### Linux
 
 - Build essentials
