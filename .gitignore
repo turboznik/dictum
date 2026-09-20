@@ -44,3 +44,7 @@ result
 
 # Python bytecode (scripts/)
 __pycache__/
+
+# Dictum model mirror payload: tracked folder, untracked contents
+server/scripts/hf/data/*
+!server/scripts/hf/data/.gitkeep

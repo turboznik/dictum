@@ -1,0 +1,5 @@
+{
+  "$comment": "Shared Dictum server configuration. Read at compile time by the desktop app (src-tauri/src/dictum_config.rs) and at runtime by the Dictum server (server/config.ts). Change serverBaseUrl to point a build at a centrally deployed server; the desktop app must be rebuilt for the change to take effect.",
+  "serverBaseUrl": "http://localhost:8000/dictum",
+  "postProcessModel": "openai/gpt-5.6-luna"
+}

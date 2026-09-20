@@ -250,22 +250,43 @@ mod tests {
     }
 
     #[test]
-    fn every_catalog_model_has_mirror_fallbacks_with_hashes() {
-        // The mirror fallback is the safety net for HF outages and blocked
-        // networks; a catalog entry without one (missing revision, missing
-        // sha256, empty mirrors) silently loses that net.
+    fn catalog_offers_no_fallback_around_the_model_mirror() {
+        // Inherited behaviour reversed on purpose. Upstream used `mirrors` as a
+        // safety net for Hugging Face outages, but for Dictum any such entry is
+        // a second, unmirrored egress path for model bytes — exactly what the
+        // model mirror exists to prevent. `deno task hf` emits an empty
+        // `mirrors` array; this fails if a hand-edited or stale catalog
+        // reintroduces one.
         for d in CATALOG.iter() {
-            let mirrors = mirror_fallbacks(&d.id);
-            assert!(!mirrors.is_empty(), "{}: no mirror fallbacks", d.id);
-            for m in &mirrors {
-                assert!(
-                    m.sha256.len() == 64,
-                    "{}: mirror entry lacks a sha256",
-                    d.id
-                );
-                assert!(m.size_bytes > 0, "{}: mirror entry lacks a size", d.id);
-                assert!(m.url.starts_with("https://"), "{}: bad url {}", d.id, m.url);
-            }
+            assert!(
+                mirror_fallbacks(&d.id).is_empty(),
+                "{}: catalog offers a download path around the model mirror",
+                d.id
+            );
+        }
+    }
+
+    #[test]
+    fn every_catalog_model_is_verifiable_and_pinned() {
+        // The mirror serves content-addressed blobs and the desktop app checks
+        // what it receives, so an entry without a hash or a pinned revision
+        // cannot be verified end to end. `deno task hf` refuses to select one;
+        // this is the same guarantee asserted against the committed result.
+        for d in CATALOG.iter() {
+            let ModelSource::HuggingFace { revision, .. } = &d.source else {
+                panic!("{}: catalog models must be mirror-backed", d.id);
+            };
+            assert_ne!(revision, "main", "{}: revision is not pinned", d.id);
+
+            let file = default_quant_file(&d.files, d.default_quant.as_deref())
+                .unwrap_or_else(|| panic!("{}: no default quant file", d.id));
+            assert_eq!(
+                file.sha256.as_deref().map(str::len),
+                Some(64),
+                "{}: default quant lacks a sha256",
+                d.id
+            );
+            assert!(file.size_bytes > 0, "{}: default quant lacks a size", d.id);
         }
     }
 

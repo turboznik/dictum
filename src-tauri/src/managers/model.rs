@@ -369,6 +369,24 @@ fn local_caps(probe: &CapabilityProbe) -> LocalCaps {
     }
 }
 
+/// Whether a download URL belongs to the Dictum server.
+///
+/// Compared on parsed origin rather than by prefix: a string prefix test would
+/// accept `http://localhost:8000.attacker.example/...`, which is a different
+/// host entirely.
+fn is_mirror_url(url: &str) -> bool {
+    let (Ok(candidate), Ok(server)) = (
+        reqwest::Url::parse(url),
+        reqwest::Url::parse(crate::dictum_config::server_base_url()),
+    ) else {
+        return false;
+    };
+
+    candidate.scheme() == server.scheme()
+        && candidate.host_str() == server.host_str()
+        && candidate.port_or_known_default() == server.port_or_known_default()
+}
+
 /// Bridges hf-hub's async download progress to Handy's `model-download-progress`
 /// event. hf-hub clones the reporter, so shared state lives behind an `Arc`.
 #[derive(Clone)]
@@ -1923,6 +1941,14 @@ impl ModelManager {
             // Fresh client per attempt so a wedged connection from the previous
             // try can't poison the retry.
             let api = ApiBuilder::from_env()
+                // Dictum never contacts Hugging Face. Pointing hf-hub at the
+                // model mirror is the whole desktop-side integration: the
+                // mirror answers the same `{repo}/resolve/{revision}/{file}`
+                // requests, so everything below — the cache layout, resume,
+                // ranged chunks — is unchanged. Set after `from_env` so a stray
+                // HF_ENDPOINT in the environment cannot redirect a download
+                // back out to the internet.
+                .with_endpoint(crate::dictum_config::MODEL_MIRROR_ENDPOINT.clone())
                 // Ignore cached and environment-provided credentials. A stale token
                 // can make otherwise-public downloads fail authentication.
                 .with_token(None)
@@ -2160,7 +2186,22 @@ impl ModelManager {
             model_info.ok_or_else(|| anyhow::anyhow!("Model not found: {}", model_id))?;
 
         let (url, expected_sha256) = match &model_info.source {
-            ModelSource::Url { url, sha256 } => (url.clone(), sha256.clone()),
+            ModelSource::Url { url, sha256 } => {
+                // The model mirror is Dictum's egress boundary for model bytes.
+                // The inherited legacy table carries hard-coded upstream URLs;
+                // fetching one would reach the internet directly and silently
+                // defeat that boundary, so a download is refused here. A legacy
+                // model already on disk still loads — this rejects acquiring
+                // new bytes, not using old ones.
+                if !is_mirror_url(url) {
+                    return Err(anyhow::anyhow!(
+                        "Model '{}' can only be downloaded from the Dictum model mirror. \
+                         Add it to server/scripts/hf/config.json and run `deno task hf`.",
+                        model_id
+                    ));
+                }
+                (url.clone(), sha256.clone())
+            }
             ModelSource::HuggingFace { repo_id, revision } => {
                 return self
                     .download_hf_model(&model_info, repo_id.clone(), revision.clone())
@@ -2579,6 +2620,41 @@ mod tests {
     use super::*;
     use std::io::Write;
     use tempfile::TempDir;
+
+    #[test]
+    fn mirror_url_check_accepts_the_configured_server() {
+        let base = crate::dictum_config::server_base_url();
+        assert!(is_mirror_url(&format!("{base}/api/hf/org/name/resolve/abc/model.gguf")));
+        assert!(is_mirror_url(base));
+    }
+
+    #[test]
+    fn mirror_url_check_rejects_every_other_host() {
+        // The inherited legacy model table's hard-coded URLs are the reason
+        // this check exists: fetching one would reach the internet directly
+        // and defeat the model mirror as an egress boundary.
+        assert!(!is_mirror_url("https://blob.handy.computer/ggml-small.bin"));
+        assert!(!is_mirror_url("https://huggingface.co/org/name/resolve/abc/f.gguf"));
+        assert!(!is_mirror_url("not a url"));
+        assert!(!is_mirror_url(""));
+    }
+
+    #[test]
+    fn mirror_url_check_is_not_fooled_by_a_prefix() {
+        // A string prefix test would accept these; comparing parsed origins
+        // does not.
+        let base = crate::dictum_config::server_base_url();
+        let Ok(parsed) = reqwest::Url::parse(base) else {
+            panic!("configured server base url should parse");
+        };
+        let host = parsed.host_str().unwrap_or("localhost");
+        let port = parsed.port_or_known_default().unwrap_or(80);
+
+        assert!(!is_mirror_url(&format!("http://{host}.example.com:{port}/api/hf/x")));
+        assert!(!is_mirror_url(&format!("http://evil{host}:{port}/api/hf/x")));
+        // Same host, different port is a different server.
+        assert!(!is_mirror_url(&format!("http://{host}:{}/api/hf/x", port + 1)));
+    }
 
     #[test]
     fn test_effective_language_accepts_chinese_script_intent_for_zh_capability() {

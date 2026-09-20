@@ -3,14 +3,20 @@
 # dependencies = ["huggingface_hub", "fsspec"]
 # ///
 """
-Handy model catalog generator.
+Dictum upstream model catalog generator.
 
-Merges three sources into one catalog.json:
+Refreshes the pinned upstream snapshot, catalog.original.json. This is the only
+step that contacts Hugging Face, and it is run deliberately: the snapshot is the
+reviewable record of what upstream offers, and its diffs are large. `deno task hf`
+derives the smaller, committed Dictum model catalog from that snapshot and never
+refreshes it.
+
+Merges three sources into one snapshot:
   1. HF card `transcribe_cpp` block  -> capabilities + benchmarks (canonical)
   2. a tiny GGUF header range-read    -> display labels only
   3. local CURATION (this file)       -> recommended set, editorial descriptions
 
-Emits catalog.json to be committed and `include_str!`'d into the Rust binary.
+Emits catalog.original.json, to be committed and reviewed.
 Run:  HF_TOKEN=$(hf auth token) uv run gen_catalog.py [out_path]
 """
 import json, os, re, sys, math, struct, datetime
@@ -293,7 +299,7 @@ def main():
     text = re.sub(r'\{\s+("filename":.*?"sha256": "[0-9a-f]{64}")\s+\}',
                   lambda m: "{" + re.sub(r",\s+", ", ", m.group(1)) + "}",
                   text, flags=re.S)
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "catalog.json")
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__), "..", "src-tauri", "src", "catalog", "catalog.original.json")
     open(out, "w").write(text)
     print(f"wrote {out}: {len(models)} models, {os.path.getsize(out)/1024:.1f} KB", file=sys.stderr)
 
